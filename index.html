@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive NEOM Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([28.0, 35.0], 7);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var neomBounds = L.latLngBounds(
+            L.latLng(27.5, 34.3),  // Southwest corner
+            L.latLng(29.0, 36.0)   // Northeast corner
+        );
+
+        L.rectangle(neomBounds, {color: "#ff7800", weight: 1}).addTo(map);
+
+        var regions = [
+            {name: "The Line", coords: [28.1, 35.0], focus: "Urban living and innovation"},
+            {name: "Oxagon", coords: [27.8, 34.7], focus: "Advanced and clean industries"},
+            {name: "Trojena", coords: [28.3, 35.5], focus: "Mountain tourism and sports"},
+            {name: "Sindalah", coords: [27.9, 34.6], focus: "Luxury tourism and yachting"}
+        ];
+
+        regions.forEach(function(region) {
+            L.marker(region.coords).addTo(map)
+                .bindPopup("<b>" + region.name + "</b><br>Focus: " + region.focus);
+        });
+
+        var info = L.control();
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+
+        info.update = function (props) {
+            this._div.innerHTML = '<h4>NEOM Regions</h4>' +  (props ?
+                '<b>' + props.name + '</b><br />Economic focus: ' + props.focus
+                : 'Hover over a region');
+        };
+
+        info.addTo(map);
+
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+            info.update(layer.feature.properties);
+        }
+
+        function resetHighlight(e) {
+            geojson.resetStyle(e.target);
+            info.update();
+        }
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+            });
+        }
+
+        var geojsonFeature = {
+            "type": "Feature",
+            "properties": {
+                "name": "NEOM",
+                "focus": "Future city with diverse economic sectors"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [34.3, 27.5],
+                    [36.0, 27.5],
+                    [36.0, 29.0],
+                    [34.3, 29.0],
+                    [34.3, 27.5]
+                ]]
+            }
+        };
+
+        var geojson = L.geoJSON(geojsonFeature, {
+            style: function (feature) {
+                return {
+                    fillColor: '#ff7800',
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            },
+            onEachFeature: onEachFeature
+        }).addTo(map);
+    </script>
+</body>
+</html>
