@@ -3,105 +3,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEOM Interactive Map</title>
-    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+    <title>NEOM: Economic Impacts and Global Comparisons</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-        .map-overlay {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            padding: 10px;
+        body {
             font-family: Arial, sans-serif;
-            z-index: 1;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .infographic {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        .section {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            width: calc(50% - 20px);
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .chart {
+            width: 100%;
+            height: 300px;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            pointer-events: none;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .toggle-button {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .toggle-button:hover {
+            background-color: #2980b9;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="map"></div>
-    <div class="map-overlay">
-        <h2>NEOM Interactive Map</h2>
-        <p>Click on regions to learn more</p>
+    <div class="container">
+        <h1>NEOM: Economic Impacts and Global Comparisons</h1>
+        <div class="infographic">
+            <div class="section">
+                <h2>NEOM vs Other Megaprojects</h2>
+                <div id="comparison-chart" class="chart"></div>
+                <div class="legend" id="comparison-legend"></div>
+            </div>
+            <div class="section">
+                <h2>Economic Sectors Impact</h2>
+                <div id="sectors-chart" class="chart"></div>
+            </div>
+            <div class="section">
+                <h2>Investment Timeline</h2>
+                <div id="timeline-chart" class="chart"></div>
+            </div>
+            <div class="section">
+                <h2>Job Creation Projection</h2>
+                <div id="jobs-chart" class="chart"></div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="toggle-data" class="toggle-button">Toggle Data View</button>
+        </div>
     </div>
 
     <script>
-        mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/satellite-v9',
-            center: [35.0, 28.0],
-            zoom: 7
-        });
+        // Data
+        const megaprojects = [
+            { name: "NEOM", investment: 500, area: 26500, jobs: 380000 },
+            { name: "Dubai Creek Harbour", investment: 20, area: 6, jobs: 200000 },
+            { name: "Songdo IBD", investment: 40, area: 60, jobs: 300000 },
+            { name: "Masdar City", investment: 22, area: 6, jobs: 50000 }
+        ];
 
-        map.on('load', () => {
-            // Add 3D terrain
-            map.addSource('mapbox-dem', {
-                'type': 'raster-dem',
-                'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-                'tileSize': 512,
-                'maxzoom': 14
-            });
-            map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+        const economicSectors = [
+            { name: "Energy", impact: 25 },
+            { name: "Technology", impact: 20 },
+            { name: "Tourism", impact: 15 },
+            { name: "Manufacturing", impact: 12 },
+            { name: "Biotechnology", impact: 10 },
+            { name: "Agriculture", impact: 8 },
+            { name: "Entertainment", impact: 6 },
+            { name: "Education", impact: 4 }
+        ];
 
-            // Add custom layers for NEOM regions here
-            // Example:
-            map.addSource('neom-regions', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'FeatureCollection',
-                    'features': [
-                        {
-                            'type': 'Feature',
-                            'geometry': {
-                                'type': 'Polygon',
-                                'coordinates': [[
-                                    [34.3, 27.5],
-                                    [36.0, 27.5],
-                                    [36.0, 29.0],
-                                    [34.3, 29.0],
-                                    [34.3, 27.5]
-                                ]]
-                            },
-                            'properties': {
-                                'name': 'NEOM',
-                                'description': 'The future of urban living'
-                            }
-                        }
-                        // Add more regions here
-                    ]
-                }
-            });
+        const investmentTimeline = [
+            { year: 2020, amount: 10 },
+            { year: 2022, amount: 50 },
+            { year: 2024, amount: 100 },
+            { year: 2026, amount: 200 },
+            { year: 2028, amount: 350 },
+            { year: 2030, amount: 500 }
+        ];
 
-            map.addLayer({
-                'id': 'neom-regions-layer',
-                'type': 'fill',
-                'source': 'neom-regions',
-                'paint': {
-                    'fill-color': 'rgba(0, 255, 255, 0.2)',
-                    'fill-outline-color': 'rgba(0, 255, 255, 1)'
-                }
-            });
+        const jobsProjection = [
+            { year: 2025, jobs: 50000 },
+            { year: 2027, jobs: 100000 },
+            { year: 2029, jobs: 200000 },
+            { year: 2031, jobs: 300000 },
+            { year: 2033, jobs: 380000 }
+        ];
 
-            // Add interactivity
-            map.on('click', 'neom-regions-layer', (e) => {
-                new mapboxgl.Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML(`<h3>${e.features[0].properties.name}</h3><p>${e.features[0].properties.description}</p>`)
-                    .addTo(map);
-            });
+        // Comparison Chart
+        function createComparisonChart() {
+            const margin = {top: 20, right: 20, bottom: 30, left: 40};
+            const width = 500 - margin.left - margin.right;
+            const height = 300 - margin.top - margin.bottom;
 
-            map.on('mouseenter', 'neom-regions-layer', () => {
-                map.getCanvas().style.cursor = 'pointer';
-            });
+            const svg = d3.select("#comparison-chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            map.on('mouseleave', 'neom-regions-layer', () => {
-                map.getCanvas().style.cursor = '';
+            const x = d3.scaleBand()
+                .range([0, width])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .range([height, 0]);
+
+            x.domain(megaprojects.map(d => d.name));
+            y.domain([0, d3.max(megaprojects, d => d.investment)]);
+
+            svg.selectAll(".bar")
+                .data(megaprojects)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", d => x(d.name))
+                .attr("width", x.bandwidth())
+                .attr("y", d => y(d.investment))
+                .attr("height", d => height - y(d.investment))
+                .attr("fill", (d, i) => d3.schemeCategory10[i]);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Investment (Billion USD)");
+
+            // Legend
+            const legend = d3.select("#comparison-legend");
+            megaprojects.forEach((d, i) => {
+                const legendItem = legend.append("div")
+                    .attr("class", "legend-item");
+                legendItem.append("div")
+                    .attr("class", "legend-color")
+                    .style("background-color", d3.schemeCategory10[i]);
+                legendItem.append("span")
+                    .text(d.name);
             });
-        });
+        }
+
+        // Economic Sectors Chart
+        function createSectorsChart() {
+            const width = 500;
+            const height = 300;
+            const radius = Math.min(width, height) / 2;
+
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+            const pie = d3.pie()
+                .value(d => d.impact)
+                .sort(null);
+
+            const arc = d3.arc()
+                .innerRadius(radius * 0.5)
+                .outerRadius(radius * 0.8);
+
+            const outerArc = d3.arc()
+                .innerRadius(radius * 0.9)
+                .outerRadius(radius * 0.9);
+
+            const svg = d3.select("#sectors-chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${width / 2},${height / 2})`);
+
+            const arcs = svg.selectAll(".arc")
+                .data(pie(economicSectors))
+                .enter().append("g")
+                .attr("class", "arc");
+
+            arcs.append("path")
+                .attr("d", arc)
+                .attr("fill", (d, i) => color(i));
+
+            // Add labels
+            arcs.append("text")
+                .attr("transform", d => {
+                    const pos = outerArc.centroid(d);
+                    const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                    pos[0] = radius * 0.95 * (midAngle < Math.PI ? 1 : -1);
+                    return `translate(${pos})`;
+                })
+                .attr("dy", ".35em")
+                .style("text-anchor", d => {
+                    const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                    return midAngle < Math.PI ? "start" : "end";
+                })
+                .text(d => `${d.data.name} (${d.data.impact}%)`);
+
+            // Add polylines
+            arcs.append("polyline")
+                .attr("points", d => {
+                    const pos = outerArc.centroid(d);
+                    const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                    pos[0] = radius * 0.95 * (midAngle < Math.PI ? 1 : -1);
+                    return [arc.centroid(d), outerArc.centroid(d), pos];
+                })
+                .style("fill", "none")
+                .style("stroke", "black")
+                .style("stroke-width", "1px");
+        }
+
+        // Investment Timeline Chart
+        function createTimelineChart() {
+            const margin = {top: 20, right: 20, bottom: 30, left: 50};
+            const width = 500 - margin.left - margin.right;
+            const height = 300 - margin.top - margin.bottom;
+
+            const svg = d3.select("#timeline-chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleLinear()
+                .domain(d3.extent(investmentTimeline, d => d.year))
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(investmentTimeline, d => d.amount)])
+                .range([height, 0]);
+
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d.amount));
+
+            svg.append("path")
+                .datum(investmentTimeline)
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            svg.selectAll(".dot")
+                .data(investmentTimeline)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => x(d.year))
+                .attr("cy", d => y(d.amount))
+                .attr("r", 5)
+                .attr("fill", "steelblue");
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Cumulative Investment (Billion USD)");
+        }
+
+        // Jobs Projection Chart
+        function createJobsChart() {
+            const margin = {top: 20, right: 20, bottom: 30, left: 50};
+            const width = 500 - margin.left - margin.right;
+            const height = 300 - margin.top - margin.bottom;
+
+            const svg = d3.select("#jobs-chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleLinear()
+                .domain(d3.extent(jobsProjection, d => d.year))
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(jobsProjection, d => d.jobs)])
+                .range([height, 0]);
+
+            const area = d3.area()
+                .x(d => x(d.year))
+                .y0(height)
+                .y1(d => y(d.jobs));
+
+            svg.append("path")
+                .datum(jobsProjection)
+                .attr("fill", "steelblue")
+                .attr("d", area);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Projected Jobs Created");
+        }
+
+        // Initialize all charts
+        function initializeAllCharts() {
+            createComparisonChart();
+            createSectorsChart();
+            createTimelineChart();
+            createJobsChart();
+        }
+
+        // Call the initialization function
+        initializeAllCharts();
+
+        console.log("NEOM Economic Infographic Initialized!");
     </script>
 </body>
 </html>
