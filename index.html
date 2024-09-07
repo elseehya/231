@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEOM: The Future of Saudi Arabia's Economy</title>
+    <title>NEOM: The Future of Saudi Arabia</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <style>
         body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #001f3f;
+            font-family: Arial, sans-serif;
+            background-color: #000033;
             color: #ffffff;
             overflow-x: hidden;
         }
         .container {
-            display: flex;
-            width: 1000%;
+            width: 1100%;
             height: 100vh;
+            display: flex;
             transition: transform 0.5s ease;
         }
         .section {
             width: 100vw;
             height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -33,18 +31,23 @@
             position: relative;
             overflow: hidden;
         }
-        h1, h2 {
-            text-align: center;
-            color: #00ffff;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
         .chart-container {
             width: 80%;
-            height: 60%;
+            height: 70%;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-gallery {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .chart {
+            min-width: 100%;
+            height: 100%;
         }
         .nav-buttons {
             position: fixed;
@@ -56,7 +59,7 @@
         }
         .nav-button {
             background-color: #00ffff;
-            color: #001f3f;
+            color: #000033;
             border: none;
             padding: 10px 20px;
             margin: 0 10px;
@@ -67,6 +70,49 @@
         .nav-button:hover {
             background-color: #ffffff;
             transform: scale(1.1);
+        }
+        .particle {
+            position: absolute;
+            background-color: #00ffff;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+        .poster {
+            width: 80%;
+            height: 70%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .poster-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .poster-content {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+        .poster-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
         }
         .tooltip {
             position: absolute;
@@ -79,109 +125,223 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        .background-animation {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+        .quiz-container {
+            width: 80%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
         }
-        .particle {
-            position: absolute;
-            background-color: rgba(0, 255, 255, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
+        .quiz-question {
+            font-size: 18px;
+            margin-bottom: 20px;
         }
-        .interactive-fact {
-            position: absolute;
-            background-color: rgba(0, 255, 255, 0.2);
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+        }
+        .quiz-option {
+            background-color: #00ffff;
+            color: #000033;
+            border: none;
             padding: 10px;
+            margin: 5px 0;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .interactive-fact:hover {
-            transform: scale(1.1);
-            background-color: rgba(0, 255, 255, 0.4);
+        .quiz-option:hover {
+            background-color: #ffffff;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        .modal-content {
-            background-color: #001f3f;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #00ffff;
-            width: 60%;
+        .timeline {
+            width: 80%;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            color: #ffffff;
+            position: relative;
+            overflow: hidden;
         }
-        .close {
-            color: #00ffff;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        .timeline-event {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #00ffff;
+            border-radius: 50%;
             cursor: pointer;
         }
-        .close:hover {
+        .timeline-tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
             color: #ffffff;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #00ffff;
+            color: #000033;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .dark-mode {
+            background-color: #ffffff;
+            color: #000033;
         }
     </style>
 </head>
 <body>
     <div class="container" id="main-container">
         <div class="section" id="intro">
-            <h1>NEOM: Shaping the Future of Saudi Arabia's Economy</h1>
-            <div class="interactive-fact" style="top: 20%; left: 10%;" onclick="showModal('NEOM Overview')">
-                What is NEOM?
-            </div>
-            <div class="interactive-fact" style="top: 70%; right: 10%;" onclick="showModal('Vision 2030')">
-                Vision 2030
+            <h1>NEOM: Shaping the Future of Saudi Arabia</h1>
+            <p>Explore the ambitious mega-project transforming the Kingdom's economy</p>
+        </div>
+        <div class="section">
+            <h2>Saudi vs Malaysia Projects</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="saudi-malaysia-chart"></div>
+                </div>
             </div>
         </div>
         <div class="section">
-            <h2>NEOM vs Global Megaprojects</h2>
-            <div class="chart-container" id="comparison-chart"></div>
-        </div>
-        <div class="section">
-            <h2>Economic Sectors Impact</h2>
-            <div class="chart-container" id="sectors-chart"></div>
+            <h2>NEOM vs UAE Projects</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="neom-uae-chart"></div>
+                </div>
+            </div>
         </div>
         <div class="section">
             <h2>Investment Timeline</h2>
-            <div class="chart-container" id="timeline-chart"></div>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="investment-timeline-chart"></div>
+                </div>
+            </div>
         </div>
         <div class="section">
-            <h2>Job Creation Projection</h2>
-            <div class="chart-container" id="jobs-chart"></div>
+            <h2>Job Creation Forecast</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="job-creation-chart"></div>
+                </div>
+            </div>
         </div>
         <div class="section">
-            <h2>Tourism Growth Forecast</h2>
-            <div class="chart-container" id="tourism-chart"></div>
+            <h2>Tourism Growth</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="tourism-growth-chart"></div>
+                </div>
+            </div>
         </div>
         <div class="section">
             <h2>Renewable Energy Adoption</h2>
-            <div class="chart-container" id="energy-chart"></div>
-        </div>
-        <div class="section">
-            <h2>Smart City Comparison</h2>
-            <div class="chart-container" id="smart-city-chart"></div>
-        </div>
-        <div class="section">
-            <h2>Economic Diversification</h2>
-            <div class="chart-container" id="diversification-chart"></div>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="renewable-energy-chart"></div>
+                </div>
+            </div>
         </div>
         <div class="section">
             <h2>Foreign Direct Investment</h2>
-            <div class="chart-container" id="fdi-chart"></div>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="fdi-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Economic Diversification</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="diversification-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>NEOM vs Other Megaprojects</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="megaprojects-comparison-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Smart City Index</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="smart-city-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>NEOM Regions Comparison</h2>
+            <div class="chart-container">
+                <div class="chart-gallery">
+                    <div class="chart" id="neom-regions-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Economic Challenges of NEOM</h2>
+            <div class="poster">
+                <div class="poster-title">Financial Sustainability</div>
+                <div class="poster-image" style="background-image: url('neom_financial.jpg');"></div>
+                <div class="poster-content">
+                    NEOM's ambitious scale raises questions about its long-term financial viability. With an estimated cost of $500 billion, the project faces challenges in securing consistent funding and generating sufficient returns to justify the massive investment.
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Political Scheme</h2>
+            <div class="poster">
+                <div class="poster-title">Geopolitical Implications</div>
+                <div class="poster-image" style="background-image: url('neom_political.jpg');"></div>
+                <div class="poster-content">
+                    NEOM's strategic location near the borders of Egypt, Israel, and Jordan introduces complex geopolitical considerations. The project's success may depend on delicate diplomatic relations and regional stability.
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Environmental Concerns</h2>
+            <div class="poster">
+                <div class="poster-title">Ecological Impact</div>
+                <div class="poster-image" style="background-image: url('neom_environment.jpg');"></div>
+                <div class="poster-content">
+                    Despite NEOM's commitment to sustainability, the massive scale of construction and development poses significant risks to the local ecosystem. Balancing progress with environmental preservation remains a critical challenge.
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Social Integration</h2>
+            <div class="poster">
+                <div class="poster-title">Cultural Adaptation</div>
+                <div class="poster-image" style="background-image: url('neom_social.jpg');"></div>
+                <div class="poster-content">
+                    NEOM's vision of a futuristic, liberal enclave within Saudi Arabia raises questions about social integration and cultural clash. Balancing traditional values with the project's progressive aims presents a unique societal challenge.
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Test Your Knowledge</h2>
+            <div class="quiz-container">
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+            </div>
+        </div>
+        <div class="section">
+            <h2>NEOM Timeline</h2>
+            <div class="timeline" id="neom-timeline"></div>
         </div>
     </div>
 
@@ -190,706 +350,11 @@
         <button class="nav-button" onclick="navigate(1)">Next</button>
     </div>
 
-    <div class="background-animation" id="background-animation"></div>
+    <button class="mode-toggle" onclick="toggleMode()">🌓</button>
 
     <div class="tooltip" id="tooltip"></div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modal-title"></h2>
-            <p id="modal-content"></p>
-        </div>
-    </div>
-
     <script>
-        // Data
-        const megaprojects = [
-            { name: "NEOM", investment: 500, area: 26500, jobs: 380000 },
-            { name: "Dubai Creek Harbour", investment: 20, area: 6, jobs: 200000 },
-            { name: "Songdo IBD", investment: 40, area: 60, jobs: 300000 },
-            { name: "Masdar City", investment: 22, area: 6, jobs: 50000 }
-        ];
-
-        const economicSectors = [
-            { name: "Energy", impact: 25 },
-            { name: "Technology", impact: 20 },
-            { name: "Tourism", impact: 15 },
-            { name: "Manufacturing", impact: 12 },
-            { name: "Biotechnology", impact: 10 },
-            { name: "Agriculture", impact: 8 },
-            { name: "Entertainment", impact: 6 },
-            { name: "Education", impact: 4 }
-        ];
-
-        const investmentTimeline = [
-            { year: 2020, amount: 10 },
-            { year: 2022, amount: 50 },
-            { year: 2024, amount: 100 },
-            { year: 2026, amount: 200 },
-            { year: 2028, amount: 350 },
-            { year: 2030, amount: 500 }
-        ];
-
-        const jobsProjection = [
-            { year: 2025, jobs: 50000 },
-            { year: 2027, jobs: 100000 },
-            { year: 2029, jobs: 200000 },
-            { year: 2031, jobs: 300000 },
-            { year: 2033, jobs: 380000 }
-        ];
-
-        const tourismGrowth = [
-            { year: 2025, visitors: 1000000 },
-            { year: 2026, visitors: 2000000 },
-            { year: 2027, visitors: 3500000 },
-            { year: 2028, visitors: 5000000 },
-            { year: 2029, visitors: 7000000 },
-            { year: 2030, visitors: 10000000 }
-        ];
-
-        const renewableEnergy = [
-            { year: 2025, percentage: 10 },
-            { year: 2026, percentage: 20 },
-            { year: 2027, percentage: 35 },
-            { year: 2028, percentage: 50 },
-            { year: 2029, percentage: 70 },
-            { year: 2030, percentage: 100 }
-        ];
-
-        const smartCityComparison = [
-            { city: "NEOM", score: 95 },
-            { city: "Singapore", score: 89 },
-            { city: "Dubai", score: 86 },
-            { city: "London", score: 85 },
-            { city: "New York", score: 84 }
-        ];
-
-        const economicDiversification = [
-            { sector: "Oil & Gas", percentage2020: 60, percentage2030: 30 },
-            { sector: "Technology", percentage2020: 10, percentage2030: 25 },
-            { sector: "Tourism", percentage2020: 5, percentage2030: 15 },
-            { sector: "Manufacturing", percentage2020: 15, percentage2030: 20 },
-            { sector: "Others", percentage2020: 10, percentage2030: 10 }
-        ];
-
-        const foreignDirectInvestment = [
-            { year: 2020, amount: 5.5 },
-            { year: 2022, amount: 7.2 },
-            { year: 2024, amount: 10.5 },
-            { year: 2026, amount: 15.8 },
-            { year: 2028, amount: 22.3 },
-            { year: 2030, amount: 30.0 }
-        ];
-
-        // Chart creation functions
-        function createComparisonChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#comparison-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleBand()
-                .range([0, width])
-                .padding(0.1);
-
-            const y = d3.scaleLinear()
-                .range([height, 0]);
-
-            x.domain(megaprojects.map(d => d.name));
-            y.domain([0, d3.max(megaprojects, d => d.investment)]);
-
-            svg.selectAll(".bar")
-                .data(megaprojects)
-                .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", d => x(d.name))
-                .attr("width", x.bandwidth())
-                .attr("y", d => y(d.investment))
-                .attr("height", d => height - y(d.investment))
-                .attr("fill", (d, i) => d3.schemeCategory10[i])
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `${d.name}<br>Investment: $${d.investment}B<br>Area: ${d.area} km²<br>Jobs: ${d.jobs}`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x))
-                .selectAll("text")
-                .attr("transform", "rotate(-45)")
-                .style("text-anchor", "end");
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
-                .attr("x", 0 - (height / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Investment (Billion USD)");
-        }
-
-        function createSectorsChart() {
-            const width = 600;
-            const height = 400;
-            const radius = Math.min(width, height) / 2;
-
-            const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-            const pie = d3.pie()
-                .value(d => d.impact)
-                .sort(null);
-
-            const arc = d3.arc()
-                .innerRadius(radius * 0.5)
-                .outerRadius(radius * 0.8);
-
-            const outerArc = d3.arc()
-                .innerRadius(radius * 0.9)
-                .outerRadius(radius * 0.9);
-
-            const svg = d3.select("#sectors-chart")
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", `translate(${width / 2},${height / 2})`);
-
-            const arcs = svg.selectAll(".arc")
-                .data(pie(economicSectors))
-                .enter().append("g")
-                .attr("class", "arc");
-
-            arcs.append("path")
-                .attr("d", arc)
-                .attr("fill", (d, i) => color(i))
-                .on("mouseover", function(event, d) {
-                                        showTooltip(event, `${d.data.name}<br>Impact: ${d.data.impact}%`);
-                })
-                .on("mouseout", hideTooltip);
-
-            arcs.append("text")
-                .attr("transform", d => `translate(${arc.centroid(d)})`)
-                .attr("dy", ".35em")
-                .style("text-anchor", "middle")
-                .text(d => d.data.name);
-        }
-
-        function createTimelineChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#timeline-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleLinear()
-                .domain(d3.extent(investmentTimeline, d => d.year))
-                .range([0, width]);
-
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(investmentTimeline, d => d.amount)])
-                .range([height, 0]);
-
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.amount));
-
-            svg.append("path")
-                .datum(investmentTimeline)
-                .attr("fill", "none")
-                .attr("stroke", "#00ffff")
-                .attr("stroke-width", 2)
-                .attr("d", line);
-
-            svg.selectAll(".dot")
-                .data(investmentTimeline)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("cx", d => x(d.year))
-                .attr("cy", d => y(d.amount))
-                .attr("r", 5)
-                .attr("fill", "#00ffff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `Year: ${d.year}<br>Investment: $${d.amount}B`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
-                .attr("x", 0 - (height / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Cumulative Investment (Billion USD)");
-        }
-
-        function createJobsChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#jobs-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleLinear()
-                .domain(d3.extent(jobsProjection, d => d.year))
-                .range([0, width]);
-
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(jobsProjection, d => d.jobs)])
-                .range([height, 0]);
-
-            const area = d3.area()
-                .x(d => x(d.year))
-                .y0(height)
-                .y1(d => y(d.jobs));
-
-            svg.append("path")
-                .datum(jobsProjection)
-                .attr("fill", "rgba(0, 255, 255, 0.3)")
-                .attr("d", area);
-
-            svg.append("path")
-                .datum(jobsProjection)
-                .attr("fill", "none")
-                .attr("stroke", "#00ffff")
-                .attr("stroke-width", 2)
-                .attr("d", d3.line()
-                    .x(d => x(d.year))
-                    .y(d => y(d.jobs))
-                );
-
-            svg.selectAll(".dot")
-                .data(jobsProjection)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("cx", d => x(d.year))
-                .attr("cy", d => y(d.jobs))
-                .attr("r", 5)
-                .attr("fill", "#00ffff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `Year: ${d.year}<br>Jobs: ${d.jobs.toLocaleString()}`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
-                .attr("x", 0 - (height / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Jobs Created");
-        }
-
-        function createTourismChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#tourism-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleLinear()
-                .domain(d3.extent(tourismGrowth, d => d.year))
-                .range([0, width]);
-
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(tourismGrowth, d => d.visitors)])
-                .range([height, 0]);
-
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.visitors));
-
-            svg.append("path")
-                .datum(tourismGrowth)
-                .attr("fill", "none")
-                .attr("stroke", "#00ffff")
-                .attr("stroke-width", 2)
-                .attr("d", line);
-
-            svg.selectAll(".dot")
-                .data(tourismGrowth)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("cx", d => x(d.year))
-                .attr("cy", d => y(d.visitors))
-                .attr("r", 5)
-                .attr("fill", "#00ffff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `Year: ${d.year}<br>Visitors: ${d.visitors.toLocaleString()}`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
-                .attr("x", 0 - (height / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Number of Visitors");
-        }
-
-        function createEnergyChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#energy-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleLinear()
-                .domain(d3.extent(renewableEnergy, d => d.year))
-                .range([0, width]);
-
-            const y = d3.scaleLinear()
-                .domain([0, 100])
-                .range([height, 0]);
-
-            const area = d3.area()
-                .x(d => x(d.year))
-                .y0(height)
-                .y1(d => y(d.percentage));
-
-            svg.append("path")
-                .datum(renewableEnergy)
-                .attr("fill", "rgba(0, 255, 255, 0.3)")
-                .attr("d", area);
-
-            svg.append("path")
-                .datum(renewableEnergy)
-                .attr("fill", "none")
-                .attr("stroke", "#00ffff")
-                .attr("stroke-width", 2)
-                .attr("d", d3.line()
-                    .x(d => x(d.year))
-                    .y(d => y(d.percentage))
-                );
-
-            svg.selectAll(".dot")
-                .data(renewableEnergy)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("cx", d => x(d.year))
-                .attr("cy", d => y(d.percentage))
-                .attr("r", 5)
-                .attr("fill", "#00ffff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `Year: ${d.year}<br>Renewable Energy: ${d.percentage}%`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
-                .attr("x", 0 - (height / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Renewable Energy Percentage");
-        }
-
-        function createSmartCityChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 100 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#smart-city-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleLinear()
-                .domain([0, 100])
-                .range([0, width]);
-
-            const y = d3.scaleBand()
-                .range([0, height])
-                .domain(smartCityComparison.map(d => d.city))
-                .padding(0.1);
-
-            svg.selectAll(".bar")
-                .data(smartCityComparison)
-                .enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", 0)
-                .attr("y", d => y(d.city))
-                .attr("width", d => x(d.score))
-                .attr("height", y.bandwidth())
-                .attr("fill", "#00ffff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `${d.city}<br>Smart City Score: ${d.score}`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + margin.bottom)
-                .attr("text-anchor", "middle")
-                .text("Smart City Score");
-        }
-
-        function createDiversificationChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 100 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#diversification-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleLinear()
-                .domain([0, 100])
-                .range([0, width]);
-
-            const y = d3.scaleBand()
-                .range([0, height])
-                .domain(economicDiversification.map(d => d.sector))
-                .padding(0.1);
-
-            svg.selectAll(".bar2020")
-                .data(economicDiversification)
-                .enter().append("rect")
-                .attr("class", "bar2020")
-                .attr("x", 0)
-                .attr("y", d => y(d.sector))
-                .attr("width", d => x(d.percentage2020))
-                .attr("height", y.bandwidth() / 2)
-                .attr("fill", "#00ffff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `${d.sector}<br>2020: ${d.percentage2020}%`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.selectAll(".bar2030")
-                .data(economicDiversification)
-                .enter().append("rect")
-                .attr("class", "bar2030")
-                .attr("x", 0)
-                .attr("y", d => y(d.sector) + y.bandwidth() / 2)
-                .attr("width", d => x(d.percentage2030))
-                .attr("height", y.bandwidth() / 2)
-                                .attr("fill", "#ff00ff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `${d.sector}<br>2030: ${d.percentage2030}%`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickFormat(d => d + "%"));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + margin.bottom)
-                .attr("text-anchor", "middle")
-                .text("Percentage of GDP");
-
-            // Legend
-            const legend = svg.append("g")
-                .attr("font-family", "sans-serif")
-                .attr("font-size", 10)
-                .attr("text-anchor", "end")
-                .selectAll("g")
-                .data(["2020", "2030"])
-                .enter().append("g")
-                .attr("transform", (d, i) => `translate(0,${i * 20})`);
-
-            legend.append("rect")
-                .attr("x", width - 19)
-                .attr("width", 19)
-                .attr("height", 19)
-                .attr("fill", (d, i) => i === 0 ? "#00ffff" : "#ff00ff");
-
-            legend.append("text")
-                .attr("x", width - 24)
-                .attr("y", 9.5)
-                .attr("dy", "0.32em")
-                .text(d => d);
-        }
-
-        function createFDIChart() {
-            const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-            const width = 600 - margin.left - margin.right;
-            const height = 400 - margin.top - margin.bottom;
-
-            const svg = d3.select("#fdi-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-
-            const x = d3.scaleLinear()
-                .domain(d3.extent(foreignDirectInvestment, d => d.year))
-                .range([0, width]);
-
-            const y = d3.scaleLinear()
-                .domain([0, d3.max(foreignDirectInvestment, d => d.amount)])
-                .range([height, 0]);
-
-            const line = d3.line()
-                .x(d => x(d.year))
-                .y(d => y(d.amount));
-
-            svg.append("path")
-                .datum(foreignDirectInvestment)
-                .attr("fill", "none")
-                .attr("stroke", "#00ffff")
-                .attr("stroke-width", 2)
-                .attr("d", line);
-
-            svg.selectAll(".dot")
-                .data(foreignDirectInvestment)
-                .enter().append("circle")
-                .attr("class", "dot")
-                .attr("cx", d => x(d.year))
-                .attr("cy", d => y(d.amount))
-                .attr("r", 5)
-                .attr("fill", "#00ffff")
-                .on("mouseover", function(event, d) {
-                    showTooltip(event, `Year: ${d.year}<br>FDI: $${d.amount}B`);
-                })
-                .on("mouseout", hideTooltip);
-
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-            svg.append("g")
-                .call(d3.axisLeft(y));
-
-            svg.append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0 - margin.left)
-                .attr("x", 0 - (height / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Foreign Direct Investment (Billion USD)");
-        }
-
-        // Utility functions
-        function showTooltip(event, text) {
-            const tooltip = d3.select("#tooltip");
-            tooltip.html(text)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 10) + "px")
-                .style("opacity", 1);
-        }
-
-        function hideTooltip() {
-            d3.select("#tooltip").style("opacity", 0);
-        }
-
-        function showModal(title) {
-            const modal = document.getElementById("modal");
-            const modalTitle = document.getElementById("modal-title");
-            const modalContent = document.getElementById("modal-content");
-
-            modalTitle.textContent = title;
-            modalContent.innerHTML = getModalContent(title);
-
-            modal.style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById("modal").style.display = "none";
-        }
-
-        function getModalContent(title) {
-            switch (title) {
-                case "NEOM Overview":
-                    return `
-                        <p>NEOM is a planned cross-border city in the Tabuk Province of northwestern Saudi Arabia. It is planned to incorporate smart city technologies and function as a tourist destination.</p>
-                        <ul>
-                            <li>Total area: 26,500 km²</li>
-                            <li>Estimated cost: $500 billion</li>
-                            <li>Planned completion: 2030</li>
-                        </ul>
-                    `;
-                case "Vision 2030":
-                    return `
-                        <p>Vision 2030 is a strategic framework to reduce Saudi Arabia's dependence on oil, diversify its economy, and develop public service sectors such as health, education, infrastructure, recreation, and tourism.</p>
-                        <ul>
-                            <li>Announced: April 25, 2016</li>
-                            <li>Key goals: Diversify economy, increase non-oil revenue, reduce unemployment</li>
-                            <li>Major projects: NEOM, Red Sea Project, Qiddiya</li>
-                        </ul>
-                    `;
-                default:
-                    return "No content available.";
-            }
-        }
-
-        // Navigation functions
         let currentSection = 0;
         const totalSections = document.querySelectorAll('.section').length;
 
@@ -902,1556 +367,860 @@
             container.style.transform = `translateX(-${currentSection * 100}vw)`;
         }
 
-        // Background animation
         function createParticles() {
-            const particleContainer = document.getElementById('background-animation');
             const particleCount = 50;
+            const container = document.body;
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.top = Math.random() * 100 + 'vh';
-                particle.style.width = Math.random() * 5 + 'px';
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particle.style.width = `${Math.random() * 5 + 1}px`;
                 particle.style.height = particle.style.width;
-                particleContainer.appendChild(particle);
+                container.appendChild(particle);
 
                 animateParticle(particle);
             }
         }
 
         function animateParticle(particle) {
-            const duration = Math.random() * 3 + 2;
-            const delay = Math.random() * 2;
-
             gsap.to(particle, {
-                x: Math.random() * 200 - 100 + 'vw',
-                y: Math.random() * 200 - 100 + 'vh',
-                opacity: Math.random(),
-                duration: duration,
-                delay: delay,
-                ease: "none",
-                onComplete: () => animateParticle(particle)
-            });
-        }
-
-        // Initialize all components
-        function initializeAllComponents() {
-            createComparisonChart();
-            createSectorsChart();
-            createTimelineChart();
-            createJobsChart();
-            createTourismChart();
-            createEnergyChart();
-            createSmartCityChart();
-            createDiversificationChart();
-            createFDIChart();
-            createParticles();
-        }
-
-        // Error handling
-        function handleError(error) {
-            console.error("An error occurred:", error);
-            alert("An error occurred. Please check the console for more information.");
-        }
-
-        // Add event listeners
-        window.addEventListener('load', () => {
-            try {
-                initializeAllComponents();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            try {
-                // Redraw charts on window resize
-                d3.selectAll("svg").remove();
-                initializeAllComponents();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-
-        // Accessibility features
-        function setupAccessibility() {
-            const navButtons = document.querySelectorAll('.nav-button');
-            navButtons.forEach(button => {
-                button.setAttribute('role', 'button');
-                button.setAttribute('aria-label', button.textContent + ' section');
-            });
-
-            const interactiveFacts = document.querySelectorAll('.interactive-fact');
-            interactiveFacts.forEach(fact => {
-                fact.setAttribute('role', 'button');
-                fact.setAttribute('aria-label', 'Show more information about ' + fact.textContent);
-                fact.setAttribute('tabindex', '0');
-            });
-        }
-
-        // Performance optimization
-        function optimizePerformance() {
-            // Use requestAnimationFrame for smooth animations
-            function animate() {
-                // Add any continuous animations here
-                requestAnimationFrame(animate);
-            }
-            animate();
-
-            // Debounce function for performance-heavy operations
-            function debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            }
-
-            // Example of using debounce
-            const debouncedResize = debounce(() => {
-                d3.selectAll("svg").remove();
-                initializeAllComponents();
-            }, 250);
-
-            window.addEventListener('resize', debouncedResize);
-        }
-
-        // Additional interactive elements
-        function addInteractiveElements() {
-            // Add a search functionality
-            const searchInput = document.createElement('input');
-            searchInput.type = 'text';
-            searchInput.placeholder = 'Search...';
-            searchInput.style.position = 'fixed';
-            searchInput.style.top = '10px';
-            searchInput.style.right = '10px';
-            searchInput.style.padding = '5px';
-            searchInput.style.zIndex = '1000';
-            document.body.appendChild(searchInput);
-
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const sections = document.querySelectorAll('.section');
-                sections.forEach(section => {
-                    const content = section.textContent.toLowerCase();
-                    if (content.includes(searchTerm)) {
-                        section.style.display = 'flex';
-                    } else {
-                        section.style.display = 'none';
-                    }
-                });
-            });
-
-            // Add a day/night mode toggle
-            const modeToggle = document.createElement('button');
-            modeToggle.textContent = '☀️';
-            modeToggle.style.position = 'fixed';
-            modeToggle.style.top = '10px';
-            modeToggle.style.left = '10px';
-            modeToggle.style.padding = '5px';
-            modeToggle.style.zIndex = '1000';
-            document.body.appendChild(modeToggle);
-
-            let isDayMode = true;
-            modeToggle.addEventListener('click', () => {
-                isDayMode = !isDayMode;
-                if (isDayMode) {
-                    document.body.style.backgroundColor = '#001f3f';
-                    document.body.style.color = '#ffffff';
-                    modeToggle.textContent = '☀️';
-                } else {
-                    document.body.style.backgroundColor = '#ffffff';
-                    document.body.style.color = '#000000';
-                    modeToggle.textContent = '🌙';
-                }
-            });
-        }
-
-        // Add social sharing functionality
-        function addSocialSharing() {
-            const shareButton = document.createElement('button');
-            shareButton.textContent = 'Share';
-            shareButton.style.position = 'fixed';
-            shareButton.style.bottom = '10px';
-            shareButton.style.right = '10px';
-            shareButton.style.padding = '5px';
-            shareButton.style.zIndex = '1000';
-            document.body.appendChild(shareButton);
-
-            shareButton.addEventListener('click', () => {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'NEOM: The Future of Saudi Arabia's Economy',
-                        text: 'Check out this interactive infographic about NEOM and its impact on Saudi Arabia's economy!',
-                        url: window.location.href
-                    }).then(() => console.log('Successful share'))
-                    .catch((error) => console.log('Error sharing', error));
-                } else {
-                    alert('Web Share API is not supported in your browser. You can manually copy the URL to share.');
-                }
-            });
-        }
-
-        // Add a simple chatbot for user queries
-        function addChatbot() {
-            const chatbotButton = document.createElement('button');
-            chatbotButton.textContent = '💬';
-            chatbotButton.style.position = 'fixed';
-            chatbotButton.style.bottom = '10px';
-            chatbotButton.style.left = '10px';
-            chatbotButton.style.padding = '5px';
-            chatbotButton.style.zIndex = '1000';
-            document.body.appendChild(chatbotButton);
-
-            const chatbotContainer = document.createElement('div');
-            chatbotContainer.style.display = 'none';
-            chatbotContainer.style.position = 'fixed';
-            chatbotContainer.style.bottom = '50px';
-            chatbotContainer.style.left = '10px';
-            chatbotContainer.style.width = '300px';
-            chatbotContainer.style.height = '400px';
-            chatbotContainer.style.backgroundColor = '#ffffff';
-            chatbotContainer.style.border = '1px solid #000000';
-            chatbotContainer.style.zIndex = '1000';
-            document.body.appendChild(chatbotContainer);
-
-            const chatbotMessages = document.createElement('div');
-            chatbotMessages.style.height = '350px';
-            chatbotMessages.style.overflowY = 'scroll';
-            chatbotContainer.appendChild(chatbotMessages);
-
-            const chatbotInput = document.createElement('input');
-            chatbotInput.type = 'text';
-            chatbotInput.placeholder = 'Ask a question...';
-            chatbotInput.style.width = '100%';
-            chatbotContainer.appendChild(chatbotInput);
-
-                        chatbotButton.addEventListener('click', () => {
-                chatbotContainer.style.display = chatbotContainer.style.display === 'none' ? 'block' : 'none';
-            });
-
-            chatbotInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const userMessage = document.createElement('p');
-                    userMessage.textContent = `You: ${chatbotInput.value}`;
-                    chatbotMessages.appendChild(userMessage);
-
-                    const botMessage = document.createElement('p');
-                    botMessage.textContent = `Bot: ${getChatbotResponse(chatbotInput.value)}`;
-                    chatbotMessages.appendChild(botMessage);
-
-                    chatbotInput.value = '';
-                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-                }
-            });
-        }
-
-        function getChatbotResponse(input) {
-            const responses = {
-                'neom': 'NEOM is a planned cross-border city in Saudi Arabia, announced as part of Saudi Vision 2030.',
-                'vision 2030': 'Saudi Vision 2030 is a strategic framework to reduce Saudi Arabia\'s dependence on oil and diversify its economy.',
-                'tourism': 'NEOM aims to be a major tourist destination, featuring advanced technologies and sustainable practices.',
-                'investment': 'The total planned investment for NEOM is estimated at $500 billion.',
-                'jobs': 'NEOM is expected to create hundreds of thousands of jobs across various sectors.',
-                'renewable energy': 'NEOM plans to be powered entirely by renewable energy sources.',
-                'smart city': 'NEOM is designed to be a smart city, incorporating cutting-edge technologies in urban planning and daily life.',
-                'economic impact': 'NEOM is expected to significantly contribute to Saudi Arabia\'s GDP and help diversify its economy.',
-                'timeline': 'The first phase of NEOM is planned to be completed by 2025, with full completion expected by 2030.',
-                'location': 'NEOM is located in the northwest of Saudi Arabia, bordering Egypt and Jordan.'
-            };
-
-            const lowerInput = input.toLowerCase();
-            for (const key in responses) {
-                if (lowerInput.includes(key)) {
-                    return responses[key];
-                }
-            }
-            return "I'm sorry, I don't have information about that. Can you try asking something else about NEOM or Vision 2030?";
-        }
-
-        // Add shooting stars animation
-        function addShootingStars() {
-            const starsContainer = document.createElement('div');
-            starsContainer.style.position = 'fixed';
-            starsContainer.style.top = '0';
-            starsContainer.style.left = '0';
-            starsContainer.style.width = '100%';
-            starsContainer.style.height = '100%';
-            starsContainer.style.overflow = 'hidden';
-            starsContainer.style.pointerEvents = 'none';
-            starsContainer.style.zIndex = '-1';
-            document.body.appendChild(starsContainer);
-
-            function createShootingStar() {
-                const star = document.createElement('div');
-                star.style.position = 'absolute';
-                star.style.width = '2px';
-                star.style.height = '2px';
-                star.style.backgroundColor = '#ffffff';
-                star.style.borderRadius = '50%';
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.left = `${Math.random() * 100}%`;
-                starsContainer.appendChild(star);
-
-                gsap.to(star, {
-                    x: `${Math.random() * 200 - 100}vw`,
-                    y: `${Math.random() * 200 - 100}vh`,
-                    opacity: 0,
-                    duration: Math.random() * 2 + 1,
-                    ease: "power1.out",
-                    onComplete: () => {
-                        star.remove();
-                        createShootingStar();
-                    }
-                });
-            }
-
-            for (let i = 0; i < 20; i++) {
-                createShootingStar();
-            }
-        }
-
-        // Add parallax effect to background elements
-        function addParallaxEffect() {
-            const parallaxElements = document.querySelectorAll('.interactive-fact');
-            
-            window.addEventListener('mousemove', (e) => {
-                const mouseX = e.clientX / window.innerWidth;
-                const mouseY = e.clientY / window.innerHeight;
-
-                parallaxElements.forEach((element, index) => {
-                    const depth = 1 + index * 0.1;
-                    const moveX = mouseX * depth * 50;
-                    const moveY = mouseY * depth * 50;
-                    element.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                });
-            });
-        }
-
-        // Add a 3D rotating cube with NEOM facts
-        function add3DRotatingCube() {
-            const cubeContainer = document.createElement('div');
-            cubeContainer.style.position = 'fixed';
-            cubeContainer.style.top = '50%';
-            cubeContainer.style.right = '20px';
-            cubeContainer.style.transform = 'translateY(-50%)';
-            cubeContainer.style.width = '200px';
-            cubeContainer.style.height = '200px';
-            cubeContainer.style.perspective = '1000px';
-            document.body.appendChild(cubeContainer);
-
-            const cube = document.createElement('div');
-            cube.style.width = '100%';
-            cube.style.height = '100%';
-            cube.style.position = 'relative';
-            cube.style.transformStyle = 'preserve-3d';
-            cube.style.transition = 'transform 0.5s';
-            cubeContainer.appendChild(cube);
-
-            const faces = [
-                { transform: 'rotateY(0deg) translateZ(100px)', content: 'NEOM: $500B Investment' },
-                { transform: 'rotateY(90deg) translateZ(100px)', content: '26,500 km² Area' },
-                { transform: 'rotateY(180deg) translateZ(100px)', content: '100% Renewable Energy' },
-                { transform: 'rotateY(-90deg) translateZ(100px)', content: 'Smart City of the Future' },
-                { transform: 'rotateX(90deg) translateZ(100px)', content: 'Completion by 2030' },
-                { transform: 'rotateX(-90deg) translateZ(100px)', content: 'Diversifying Saudi Economy' }
-            ];
-
-            faces.forEach(face => {
-                const faceDom = document.createElement('div');
-                faceDom.style.position = 'absolute';
-                faceDom.style.width = '100%';
-                faceDom.style.height = '100%';
-                faceDom.style.backgroundColor = 'rgba(0, 255, 255, 0.3)';
-                faceDom.style.border = '1px solid #00ffff';
-                faceDom.style.display = 'flex';
-                faceDom.style.alignItems = 'center';
-                faceDom.style.justifyContent = 'center';
-                faceDom.style.textAlign = 'center';
-                faceDom.style.transform = face.transform;
-                faceDom.textContent = face.content;
-                cube.appendChild(faceDom);
-            });
-
-            let rotateX = 0;
-            let rotateY = 0;
-
-            function rotateCube() {
-                rotateX += 0.5;
-                rotateY += 0.5;
-                cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                requestAnimationFrame(rotateCube);
-            }
-
-            rotateCube();
-        }
-
-        // Add a progress bar for Vision 2030 goals
-        function addVision2030ProgressBar() {
-            const progressContainer = document.createElement('div');
-            progressContainer.style.position = 'fixed';
-            progressContainer.style.bottom = '20px';
-            progressContainer.style.left = '50%';
-            progressContainer.style.transform = 'translateX(-50%)';
-            progressContainer.style.width = '80%';
-            progressContainer.style.height = '20px';
-            progressContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-            progressContainer.style.borderRadius = '10px';
-            progressContainer.style.overflow = 'hidden';
-            document.body.appendChild(progressContainer);
-
-            const progressBar = document.createElement('div');
-            progressBar.style.width = '0%';
-            progressBar.style.height = '100%';
-            progressBar.style.backgroundColor = '#00ffff';
-            progressBar.style.transition = 'width 2s ease-in-out';
-            progressContainer.appendChild(progressBar);
-
-            const progressLabel = document.createElement('div');
-            progressLabel.style.position = 'absolute';
-            progressLabel.style.top = '50%';
-            progressLabel.style.left = '50%';
-            progressLabel.style.transform = 'translate(-50%, -50%)';
-            progressLabel.style.color = '#ffffff';
-            progressLabel.style.fontWeight = 'bold';
-            progressContainer.appendChild(progressLabel);
-
-            function updateProgress() {
-                const currentYear = new Date().getFullYear();
-                const progress = Math.min(100, Math.max(0, (currentYear - 2016) / (2030 - 2016) * 100));
-                progressBar.style.width = `${progress}%`;
-                progressLabel.textContent = `Vision 2030 Progress: ${Math.round(progress)}%`;
-            }
-
-            updateProgress();
-            setInterval(updateProgress, 60000); // Update every minute
-        }
-
-        // Add a floating NEOM logo
-        function addFloatingLogo() {
-            const logo = document.createElement('img');
-            logo.src = 'https://www.neom.com/content/dam/neom/images/logos/neom-logo.svg';
-            logo.style.position = 'fixed';
-            logo.style.top = '20px';
-            logo.style.left = '20px';
-            logo.style.width = '100px';
-            logo.style.filter = 'brightness(0) invert(1)';
-            document.body.appendChild(logo);
-
-            gsap.to(logo, {
-                y: '20px',
-                duration: 2,
+                x: `random(-50, 50, 5)`,
+                y: `random(-50, 50, 5)`,
+                duration: `random(3, 5)`,
                 repeat: -1,
                 yoyo: true,
-                ease: "power1.inOut"
+                ease: 'none'
             });
         }
 
-        // Add an interactive timeline
-        function addInteractiveTimeline() {
-            const timelineContainer = document.createElement('div');
-            timelineContainer.style.position = 'fixed';
-            timelineContainer.style.bottom = '50px';
-            timelineContainer.style.left = '50%';
-            timelineContainer.style.transform = 'translateX(-50%)';
-            timelineContainer.style.width = '80%';
-            timelineContainer.style.height = '100px';
-            timelineContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-            timelineContainer.style.borderRadius = '10px';
-            timelineContainer.style.overflow = 'hidden';
-            document.body.appendChild(timelineContainer);
+        function createShootingStars() {
+            setInterval(() => {
+                const star = document.createElement('div');
+                star.classList.add('shooting-star');
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = '0';
+                document.body.appendChild(star);
 
-            const timelineEvents = [
-                { year: 2016, event: 'Vision 2030 Announced' },
-                { year: 2017, event: 'NEOM Project Unveiled' },
-                { year: 2020, event: 'The Line Concept Introduced' },
-                { year: 2022, event: 'NEOM's Green Hydrogen Project Launched' },
-                { year: 2025, event: 'First NEOM Zone Completion (Planned)' },
-                { year: 2030, event: 'Vision 2030 Goal Year' }
-            ];
-
-            timelineEvents.forEach((event, index) => {
-                const eventMarker = document.createElement('div');
-                eventMarker.style.position = 'absolute';
-                eventMarker.style.bottom = '0';
-                eventMarker.style.left = `${index / (timelineEvents.length - 1) * 100}%`;
-                eventMarker.style.width = '10px';
-                eventMarker.style.height = '10px';
-                eventMarker.style.backgroundColor = '#00ffff';
-                eventMarker.style.borderRadius = '50%';
-                eventMarker.style.cursor = 'pointer';
-                timelineContainer.appendChild(eventMarker);
-
-                eventMarker.addEventListener('mouseover', () => {
-                    showTooltip(event, eventMarker);
-                });
-
-                eventMarker.addEventListener('mouseout', hideTooltip);
-            });
-        }
-
-        function showTooltip(event, element) {
-            const tooltip = document.createElement('div');
-            tooltip.style.position = 'absolute';
-            tooltip.style.bottom = '100%';
-            tooltip.style.left = '50%';
-            tooltip.style.transform = 'translateX(-50%)';
-            tooltip.style.backgroundColor = 'rgba(0, 255, 255, 0.9)';
-            tooltip.style.color = '#000000';
-            tooltip.style.padding = '5px 10px';
-            tooltip.style.borderRadius = '5px';
-            tooltip.style.whiteSpace = 'nowrap';
-            tooltip.textContent = `${event.year}: ${event.event}`;
-            element.appendChild(tooltip);
-        }
-
-        // Add a dynamic word cloud
-        function addWordCloud() {
-            const words = [
-                'NEOM', 'Vision 2030', 'Saudi Arabia', 'Smart City', 'Innovation',
-                'Sustainability', 'Technology', 'Tourism', 'Renewable Energy', 'Economic Diversification',
-                'The Line', 'Oxagon', 'Trojena', 'Green Hydrogen', 'AI',
-                'Robotics', 'Biotechnology', 'Digital Twin', 'Zero Carbon', 'Desalination'
-            ];
-
-            const cloudContainer = document.createElement('div');
-            cloudContainer.style.position = 'fixed';
-            cloudContainer.style.top = '50%';
-            cloudContainer.style.left = '50%';
-            cloudContainer.style.transform = 'translate(-50%, -50%)';
-            cloudContainer.style.width = '60%';
-            cloudContainer.style.height = '60%';
-            cloudContainer.style.pointerEvents = 'none';
-            document.body.appendChild(cloudContainer);
-
-            words.forEach(word => {
-                const wordElement = document.createElement('div');
-                wordElement.textContent = word;
-                wordElement.style.position = 'absolute';
-                wordElement.style.fontSize = `${Math.random() * 20 + 10}px`;
-                wordElement.style.color = `hsl(${Math.random() * 360}, 100%, 80%)`;
-                wordElement.style.opacity = Math.random() * 0.5 + 0.5;
-                wordElement.style.transform = `rotate(${Math.random() * 360}deg)`;
-                cloudContainer.appendChild(wordElement);
-
-                gsap.to(wordElement, {
-                    x: `${Math.random() * 100 - 50}%`,
-                    y: `${Math.random() * 100 - 50}%`,
-                    rotation: `${Math.random() * 720 - 360}`,
-                    duration: Math.random() * 10 + 5,
-                    repeat: -1,
-                                        yoyo: true,
-                    ease: "power1.inOut"
-                });
-            });
-        }
-
-        // Add a dynamic data stream visualization
-        function addDataStreamVisualization() {
-            const streamContainer = document.createElement('div');
-            streamContainer.style.position = 'fixed';
-            streamContainer.style.top = '0';
-            streamContainer.style.left = '0';
-            streamContainer.style.width = '100%';
-            streamContainer.style.height = '100%';
-            streamContainer.style.pointerEvents = 'none';
-            streamContainer.style.zIndex = '-1';
-            document.body.appendChild(streamContainer);
-
-            function createDataStream() {
-                const stream = document.createElement('div');
-                stream.style.position = 'absolute';
-                stream.style.top = `${Math.random() * 100}%`;
-                stream.style.left = '-50px';
-                stream.style.width = '50px';
-                stream.style.height = '2px';
-                stream.style.backgroundColor = `rgba(0, 255, 255, ${Math.random() * 0.5 + 0.1})`;
-                streamContainer.appendChild(stream);
-
-                gsap.to(stream, {
-                    x: window.innerWidth + 100,
-                    duration: Math.random() * 3 + 2,
-                    ease: "none",
-                    onComplete: () => {
-                        stream.remove();
-                        createDataStream();
-                    }
-                });
-            }
-
-            for (let i = 0; i < 20; i++) {
-                createDataStream();
-            }
-        }
-
-        // Add an interactive map of NEOM
-        function addInteractiveMap() {
-            const mapContainer = document.createElement('div');
-            mapContainer.style.position = 'fixed';
-            mapContainer.style.bottom = '20px';
-            mapContainer.style.right = '20px';
-            mapContainer.style.width = '300px';
-            mapContainer.style.height = '200px';
-            mapContainer.style.backgroundColor = 'rgba(0, 255, 255, 0.1)';
-            mapContainer.style.border = '1px solid #00ffff';
-            mapContainer.style.borderRadius = '10px';
-            mapContainer.style.overflow = 'hidden';
-            document.body.appendChild(mapContainer);
-
-            const mapImage = document.createElement('img');
-            mapImage.src = 'https://www.neom.com/content/dam/neom/images/maps/neom-map.png';
-            mapImage.style.width = '100%';
-            mapImage.style.height = '100%';
-            mapImage.style.objectFit = 'cover';
-            mapContainer.appendChild(mapImage);
-
-            const mapOverlay = document.createElement('div');
-            mapOverlay.style.position = 'absolute';
-            mapOverlay.style.top = '0';
-            mapOverlay.style.left = '0';
-            mapOverlay.style.width = '100%';
-            mapOverlay.style.height = '100%';
-            mapOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            mapContainer.appendChild(mapOverlay);
-
-            const mapTitle = document.createElement('div');
-            mapTitle.textContent = 'NEOM Map';
-            mapTitle.style.position = 'absolute';
-            mapTitle.style.top = '10px';
-            mapTitle.style.left = '10px';
-            mapTitle.style.color = '#ffffff';
-            mapTitle.style.fontWeight = 'bold';
-            mapOverlay.appendChild(mapTitle);
-
-            const mapPoints = [
-                { name: 'The Line', x: 30, y: 50 },
-                { name: 'Oxagon', x: 70, y: 80 },
-                { name: 'Trojena', x: 50, y: 20 }
-            ];
-
-            mapPoints.forEach(point => {
-                const mapPoint = document.createElement('div');
-                mapPoint.style.position = 'absolute';
-                mapPoint.style.left = `${point.x}%`;
-                mapPoint.style.top = `${point.y}%`;
-                mapPoint.style.width = '10px';
-                mapPoint.style.height = '10px';
-                mapPoint.style.backgroundColor = '#00ffff';
-                mapPoint.style.borderRadius = '50%';
-                mapPoint.style.cursor = 'pointer';
-                mapOverlay.appendChild(mapPoint);
-
-                mapPoint.addEventListener('mouseover', () => {
-                    showTooltip({ year: '', event: point.name }, mapPoint);
-                });
-
-                mapPoint.addEventListener('mouseout', hideTooltip);
-            });
-        }
-
-        // Add a pulsating effect to important elements
-        function addPulsatingEffect() {
-            const pulsatingElements = document.querySelectorAll('h1, h2, .interactive-fact');
-
-            pulsatingElements.forEach(element => {
-                gsap.to(element, {
-                    scale: 1.05,
+                gsap.to(star, {
+                    x: `random(-300, 300)`,
+                    y: '100vh',
                     duration: 1,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "power1.inOut"
+                    ease: 'power1.in',
+                    onComplete: () => star.remove()
                 });
-            });
+            }, 3000);
         }
 
-        // Add a particle system for background animation
-        function addParticleSystem() {
-            const canvas = document.createElement('canvas');
-            canvas.style.position = 'fixed';
-            canvas.style.top = '0';
-            canvas.style.left = '0';
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-            canvas.style.pointerEvents = 'none';
-            canvas.style.zIndex = '-1';
-            document.body.appendChild(canvas);
+        function createChart(id, type, data, options) {
+            const svg = d3.select(`#${id}`)
+                                .append('svg')
+                .attr('width', '100%')
+                .attr('height', '100%');
 
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const particles = [];
-
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.size = Math.random() * 3 + 1;
-                    this.speedX = Math.random() * 3 - 1.5;
-                    this.speedY = Math.random() * 3 - 1.5;
-                }
-
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-
-                    if (this.size > 0.2) this.size -= 0.1;
-                }
-
-                draw() {
-                    ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            function createParticles() {
-                for (let i = 0; i < 100; i++) {
-                    particles.push(new Particle());
-                }
-            }
-
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].update();
-                    particles[i].draw();
-
-                    if (particles[i].size <= 0.2) {
-                        particles.splice(i, 1);
-                        i--;
-                    }
-                }
-                if (particles.length < 100) {
-                    createParticles();
-                }
-                requestAnimationFrame(animateParticles);
-            }
-
-            createParticles();
-            animateParticles();
-        }
-
-        // Add a dynamic background gradient
-        function addDynamicBackground() {
-            const gradientElement = document.createElement('div');
-            gradientElement.style.position = 'fixed';
-            gradientElement.style.top = '0';
-            gradientElement.style.left = '0';
-            gradientElement.style.width = '100%';
-            gradientElement.style.height = '100%';
-            gradientElement.style.zIndex = '-2';
-            document.body.appendChild(gradientElement);
-
-            function updateGradient() {
-                const hue1 = (Date.now() / 50) % 360;
-                const hue2 = (hue1 + 180) % 360;
-                gradientElement.style.background = `linear-gradient(45deg, hsl(${hue1}, 50%, 20%), hsl(${hue2}, 50%, 20%))`;
-                requestAnimationFrame(updateGradient);
-            }
-
-            updateGradient();
-        }
-
-        // Add interactive data points
-        function addInteractiveDataPoints() {
-            const dataPoints = [
-                { label: 'GDP Growth', value: '3.8%', x: 20, y: 30 },
-                { label: 'FDI Inflow', value: '$19.3B', x: 80, y: 40 },
-                { label: 'Tourism Revenue', value: '$24.7B', x: 30, y: 70 },
-                { label: 'Renewable Energy', value: '50% by 2030', x: 70, y: 60 }
-            ];
-
-            dataPoints.forEach(point => {
-                const dataPoint = document.createElement('div');
-                dataPoint.style.position = 'fixed';
-                dataPoint.style.left = `${point.x}%`;
-                dataPoint.style.top = `${point.y}%`;
-                dataPoint.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
-                dataPoint.style.padding = '10px';
-                dataPoint.style.borderRadius = '5px';
-                dataPoint.style.cursor = 'pointer';
-                dataPoint.textContent = point.label;
-                document.body.appendChild(dataPoint);
-
-                dataPoint.addEventListener('click', () => {
-                    alert(`${point.label}: ${point.value}`);
-                });
-
-                gsap.to(dataPoint, {
-                    scale: 1.1,
-                    duration: 1,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "power1.inOut"
-                });
-            });
-        }
-
-        // Add a scrolling news ticker
-        function addNewsTicker() {
-            const tickerContainer = document.createElement('div');
-            tickerContainer.style.position = 'fixed';
-            tickerContainer.style.bottom = '0';
-            tickerContainer.style.left = '0';
-            tickerContainer.style.width = '100%';
-            tickerContainer.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
-            tickerContainer.style.padding = '10px 0';
-            tickerContainer.style.overflow = 'hidden';
-            document.body.appendChild(tickerContainer);
-
-            const tickerContent = document.createElement('div');
-            tickerContent.style.whiteSpace = 'nowrap';
-            tickerContent.style.display = 'inline-block';
-            tickerContent.style.paddingLeft = '100%';
-            tickerContent.style.animation = 'ticker 30s linear infinite';
-            tickerContainer.appendChild(tickerContent);
-
-            const news = [
-                'NEOM announces new sustainable water desalination project',
-                'Saudi Arabia\'s non-oil revenue grows by 30% in Q2 2023',
-                'The Line: Construction progress reaches new milestone',
-                'NEOM partners with global tech giants for AI development',
-                'Saudi Vision 2030: Unemployment rate drops to record low'
-            ];
-
-            news.forEach(item => {
-                const newsItem = document.createElement('span');
-                newsItem.textContent = item;
-                newsItem.style.marginRight = '50px';
-                tickerContent.appendChild(newsItem);
-            });
-
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes ticker {
-                    0% { transform: translate3d(0, 0, 0); }
-                    100% { transform: translate3d(-100%, 0, 0); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // Add a day/night cycle effect
-        function addDayNightCycle() {
-            const cycleOverlay = document.createElement('div');
-            cycleOverlay.style.position = 'fixed';
-            cycleOverlay.style.top = '0';
-            cycleOverlay.style.left = '0';
-            cycleOverlay.style.width = '100%';
-            cycleOverlay.style.height = '100%';
-            cycleOverlay.style.pointerEvents = 'none';
-            cycleOverlay.style.zIndex = '-1';
-            document.body.appendChild(cycleOverlay);
-
-            function updateCycle() {
-                const date = new Date();
-                const hours = date.getHours();
-                const minutes = date.getMinutes();
-                const totalMinutes = hours * 60 + minutes;
-                const percentage = totalMinutes / 1440; // 1440 minutes in a day
-
-                let backgroundColor;
-                if (percentage < 0.25) { // Night
-                    backgroundColor = `rgba(0, 0, 50, ${0.7 - percentage * 2})`;
-                } else if (percentage < 0.5) { // Morning
-                    backgroundColor = `rgba(255, 200, 100, ${(percentage - 0.25) * 2})`;
-                } else if (percentage < 0.75) { // Day
-                    backgroundColor = `rgba(100, 200, 255, ${1 - (percentage - 0.5) * 2})`;
-                } else { // Evening
-                    backgroundColor = `rgba(255, 100, 100, ${(percentage - 0.75) * 2})`;
-                }
-
-                cycleOverlay.style.backgroundColor = backgroundColor;
-                requestAnimationFrame(updateCycle);
-            }
-
-            updateCycle();
-        }
-
-        // Initialize all components
-        function initializeAllComponents() {
-            createComparisonChart();
-            createSectorsChart();
-            createTimelineChart();
-            createJobsChart();
-            createTourismChart();
-            createEnergyChart();
-            createSmartCityChart();
-            createDiversificationChart();
-            createFDIChart();
-            addShootingStars();
-            addParallaxEffect();
-            add3DRotatingCube();
-            addVision2030ProgressBar();
-            addFloatingLogo();
-            addInteractiveTimeline();
-            addWordCloud();
-            addDataStreamVisualization();
-            addInteractiveMap();
-            addPulsatingEffect();
-            addParticleSystem();
-            addDynamicBackground();
-            addInteractiveDataPoints();
-            addNewsTicker();
-            addDayNightCycle();
-            setupAccessibility();
-            optimizePerformance();
-            addInteractiveElements();
-            addSocialSharing();
-            addChatbot();
-        }
-
-        // Error handling wrapper
-        function safeExecute(func) {
-            try {
-                func();
-            } catch (error) {
-                console.error(`Error in ${func.name}:`, error);
-                // You could add more sophisticated error handling here, such as displaying an error message to the user
+            switch (type) {
+                case 'bar':
+                    createBarChart(svg, data, options);
+                    break;
+                case 'line':
+                    createLineChart(svg, data, options);
+                    break;
+                case 'pie':
+                    createPieChart(svg, data, options);
+                    break;
+                case 'radar':
+                    createRadarChart(svg, data, options);
+                    break;
+                case 'stacked':
+                    createStackedAreaChart(svg, data, options);
+                    break;
             }
         }
 
-        // Initialize everything safely
-        window.addEventListener('load', () => {
-            safeExecute(initializeAllComponents);
-        });
+        function createBarChart(svg, data, options) {
+            const margin = {top: 20, right: 30, bottom: 40, left: 60};
+            const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
+            const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
 
-        // Resize handler
-        window.addEventListener('resize', debounce(() => {
-            safeExecute(() => {
-                d3.selectAll("svg").remove();
-                initializeAllComponents();
-            });
-        }, 250));
+            const x = d3.scaleBand()
+                .range([0, width])
+                .padding(0.1);
 
-        console.log("NEOM Economic Impact Visualization Initialized!");
-    </    </script>
+            const y = d3.scaleLinear()
+                .range([height, 0]);
 
-    <script>
-        // Add a dynamic pie chart that updates in real-time
-        function addDynamicPieChart() {
-            const chartContainer = document.createElement('div');
-            chartContainer.style.position = 'fixed';
-            chartContainer.style.top = '20px';
-            chartContainer.style.right = '20px';
-            chartContainer.style.width = '200px';
-            chartContainer.style.height = '200px';
-            document.body.appendChild(chartContainer);
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const width = 200;
-            const height = 200;
+            x.domain(data.map(d => d.label));
+            y.domain([0, d3.max(data, d => d.value)]);
+
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "rotate(-45)")
+                .style("text-anchor", "end");
+
+            g.append("g")
+                .call(d3.axisLeft(y));
+
+            g.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", d => x(d.label))
+                .attr("y", d => y(d.value))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - y(d.value))
+                .attr("fill", options.color || "#00ffff")
+                .on("mouseover", function(event, d) {
+                    showTooltip(event, `${d.label}: ${d.value}`);
+                })
+                .on("mouseout", hideTooltip);
+
+            // Add chart title
+            svg.append("text")
+                .attr("x", width / 2 + margin.left)
+                .attr("y", margin.top / 2)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("fill", "#ffffff")
+                .text(options.title);
+
+            // Add animations
+            g.selectAll(".bar")
+                .attr("y", height)
+                .attr("height", 0)
+                .transition()
+                .duration(1000)
+                .attr("y", d => y(d.value))
+                .attr("height", d => height - y(d.value));
+        }
+
+        function createLineChart(svg, data, options) {
+            const margin = {top: 20, right: 30, bottom: 40, left: 60};
+            const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
+            const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
+
+            const x = d3.scaleTime()
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .range([height, 0]);
+
+            const line = d3.line()
+                .x(d => x(d.date))
+                .y(d => y(d.value));
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            x.domain(d3.extent(data, d => d.date));
+            y.domain([0, d3.max(data, d => d.value)]);
+
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x));
+
+            g.append("g")
+                .call(d3.axisLeft(y));
+
+            g.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", options.color || "#00ffff")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            // Add data points
+            g.selectAll(".dot")
+                .data(data)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => x(d.date))
+                .attr("cy", d => y(d.value))
+                .attr("r", 4)
+                .attr("fill", options.color || "#00ffff")
+                .on("mouseover", function(event, d) {
+                    showTooltip(event, `${d.date.toDateString()}: ${d.value}`);
+                })
+                .on("mouseout", hideTooltip);
+
+            // Add chart title
+            svg.append("text")
+                .attr("x", width / 2 + margin.left)
+                .attr("y", margin.top / 2)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("fill", "#ffffff")
+                .text(options.title);
+
+            // Add animations
+            const pathLength = g.select("path").node().getTotalLength();
+
+            g.select("path")
+                .attr("stroke-dasharray", pathLength + " " + pathLength)
+                .attr("stroke-dashoffset", pathLength)
+                .transition()
+                .duration(2000)
+                .attr("stroke-dashoffset", 0);
+
+            g.selectAll(".dot")
+                .attr("opacity", 0)
+                .transition()
+                .delay((d, i) => i * 100)
+                .duration(500)
+                .attr("opacity", 1);
+        }
+
+        function createPieChart(svg, data, options) {
+            const width = svg.node().getBoundingClientRect().width;
+            const height = svg.node().getBoundingClientRect().height;
             const radius = Math.min(width, height) / 2;
 
-            const svg = d3.select(chartContainer)
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
+            const g = svg.append("g")
                 .attr("transform", `translate(${width / 2},${height / 2})`);
 
             const color = d3.scaleOrdinal(d3.schemeCategory10);
 
             const pie = d3.pie()
-                .value(d => d.value)
-                .sort(null);
+                .value(d => d.value);
 
-            const arc = d3.arc()
-                .innerRadius(radius * 0.5)
-                .outerRadius(radius * 0.8);
+            const path = d3.arc()
+                .outerRadius(radius - 10)
+                .innerRadius(0);
 
-            let data = [
-                {name: "Sector A", value: 30},
-                {name: "Sector B", value: 25},
-                {name: "Sector C", value: 20},
-                {name: "Sector D", value: 15},
-                {name: "Sector E", value: 10}
-            ];
+            const arc = g.selectAll(".arc")
+                .data(pie(data))
+                .enter().append("g")
+                .attr("class", "arc");
 
-            function updateChart() {
-                // Update data randomly
-                data = data.map(d => ({...d, value: Math.random() * 50}));
+            arc.append("path")
+                .attr("d", path)
+                .attr("fill", (d, i) => color(i))
+                .on("mouseover", function(event, d) {
+                    showTooltip(event, `${d.data.label}: ${d.data.value}`);
+                })
+                .on("mouseout", hideTooltip);
 
-                const arcs = svg.selectAll(".arc")
-                    .data(pie(data));
+            arc.append("text")
+                .attr("transform", d => `translate(${path.centroid(d)})`)
+                .attr("dy", "0.35em")
+                .text(d => d.data.label)
+                .style("text-anchor", "middle")
+                .style("fill", "#ffffff")
+                .style("font-size", "12px");
 
-                arcs.enter()
-                    .append("path")
-                    .attr("class", "arc")
-                    .merge(arcs)
-                    .attr("d", arc)
-                    .attr("fill", (d, i) => color(i))
-                    .transition()
-                    .duration(1000);
+            // Add chart title
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("fill", "#ffffff")
+                .text(options.title);
 
-                arcs.exit().remove();
+            // Add animations
+            arc.select("path")
+                .transition()
+                .duration(1000)
+                .attrTween("d", function(d) {
+                    const interpolate = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+                    return function(t) {
+                        return path(interpolate(t));
+                    };
+                });
+        }
 
-                setTimeout(updateChart, 3000);
+        function createRadarChart(svg, data, options) {
+            const width = svg.node().getBoundingClientRect().width;
+            const height = svg.node().getBoundingClientRect().height;
+            const radius = Math.min(width, height) / 2;
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${width / 2},${height / 2})`);
+
+            const angleSlice = Math.PI * 2 / data[0].axes.length;
+
+            const rScale = d3.scaleLinear()
+                .range([0, radius])
+                .domain([0, d3.max(data, d => d3.max(d.axes, a => a.value))]);
+
+            // Draw the background circles
+            const axisGrid = g.selectAll(".levels")
+                .data(d3.range(1, 6).reverse())
+                .enter()
+                .append("circle")
+                .attr("class", "gridCircle")
+                .attr("r", d => radius / 5 * d)
+                .style("fill", "#CDCDCD")
+                .style("stroke", "#CDCDCD")
+                .style("fill-opacity", 0.1);
+
+            // Draw the axes
+            const axis = g.selectAll(".axis")
+                .data(data[0].axes)
+                .enter()
+                .append("g")
+                .attr("class", "axis");
+
+            axis.append("line")
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("x2", (d, i) => rScale(1.1) * Math.cos(angleSlice * i - Math.PI / 2))
+                .attr("y2", (d, i) => rScale(1.1) * Math.sin(angleSlice * i - Math.PI / 2))
+                .attr("class", "line")
+                .style("stroke", "white")
+                .style("stroke-width", "2px");
+
+            axis.append("text")
+                .attr("class", "legend")
+                .style("font-size", "11px")
+                .attr("text-anchor", "middle")
+                .attr("dy", "0.35em")
+                .attr("x", (d, i) => rScale(1.2) * Math.cos(angleSlice * i - Math.PI / 2))
+                .attr("y", (d, i) => rScale(1.2) * Math.sin(angleSlice * i - Math.PI / 2))
+                .text(d => d.axis)
+                .call(wrap, 60);
+
+            // Draw the radar chart blobs
+            const radarLine = d3.lineRadial()
+                .curve(d3.curveLinearClosed)
+                .radius(d => rScale(d.value))
+                .angle((d, i) => i * angleSlice);
+
+            const blobWrapper = g.selectAll(".radarWrapper")
+                .data(data)
+                .enter().append("g")
+                .attr("class", "radarWrapper");
+
+            blobWrapper.append("path")
+                .attr("class", "radarArea")
+                .attr("d", d => radarLine(d.axes))
+                .style("fill", (d, i) => options.colors[i])
+                .style("fill-opacity", 0.1)
+                .on('mouseover', function(event, d) {
+                    d3.selectAll(".radarArea")
+                        .transition().duration(200)
+                        .style("fill-opacity", 0.1);
+                    d3.select(this)
+                        .transition().duration(200)
+                        .style("fill-opacity", 0.7);
+                })
+                .on('mouseout', function() {
+                    d3.selectAll(".radarArea")
+                        .transition().duration(200)
+                        .style("fill-opacity", 0.1);
+                });
+
+            blobWrapper.append("path")
+                .attr("class", "radarStroke")
+                .attr("d", d => radarLine(d.axes))
+                .style("stroke-width", "2px")
+                .style("stroke", (d, i) => options.colors[i])
+                .style("fill", "none");
+
+            // Append the circles
+            blobWrapper.selectAll(".radarCircle")
+                .data(d => d.axes)
+                .enter()
+                .append("circle")
+                .attr("class", "radarCircle")
+                .attr("r", 4)
+                .attr("cx", (d, i) => rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2))
+                .attr("cy", (d, i) => rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2))
+                .style("fill", (d, i, j) => options.colors[j])
+                .style("fill-opacity", 0.8);
+
+            // Add chart title
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("fill", "#ffffff")
+                .text(options.title);
+
+            // Wrapping function for the text labels
+            function wrap(text, width) {
+                text.each(function() {
+                    var text = d3.select(this),
+                        words = text.text().split(/\s+/).reverse(),
+                        word,
+                        line = [],
+                        lineNumber = 0,
+                        lineHeight = 1.4,
+                        y = text.attr("y"),
+                        x = text.attr("x"),
+                        dy = parseFloat(text.attr("dy")),
+                        tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+                    while (word = words.pop()) {
+                        line.push(word);
+                        tspan.text(line.join(" "));
+                        if (tspan.node().getComputedTextLength() > width) {
+                            line.pop();
+                            tspan.text(line.join(" "));
+                            line = [word];
+                            tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                        }
+                    }
+                });
             }
 
-            updateChart();
+            // Add animations
+            blobWrapper.selectAll("path")
+                .style("opacity", 0)
+                .transition()
+                .duration(1000)
+                .style("opacity", 1);
+
+            blobWrapper.selectAll(".radarCircle")
+                .style("opacity", 0)
+                .transition()
+                .delay((d, i) => i * 50)
+                .duration(500)
+                .style("opacity", 0.8);
         }
 
-        // Add a force-directed graph to show relationships
-        function addForceDirectedGraph() {
-            const graphContainer = document.createElement('div');
-            graphContainer.style.position = 'fixed';
-            graphContainer.style.bottom = '20px';
-            graphContainer.style.left = '20px';
-            graphContainer.style.width = '300px';
-            graphContainer.style.height = '300px';
-            graphContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-            graphContainer.style.borderRadius = '10px';
-            document.body.appendChild(graphContainer);
+        function createStackedAreaChart(svg, data, options) {
+            const margin = {top: 20, right: 30, bottom: 40, left: 60};
+            const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
+                        const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
 
-            const width = 300;
-            const height = 300;
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
 
-            const svg = d3.select(graphContainer)
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height);
+            const x = d3.scaleTime()
+                .range([0, width]);
 
-            const nodes = [
-                {id: "NEOM", group: 1},
-                {id: "The Line", group: 2},
-                {id: "Oxagon", group: 2},
-                {id: "Trojena", group: 2},
-                {id: "Renewable Energy", group: 3},
-                {id: "Tourism", group: 3},
-                {id: "Technology", group: 3}
-            ];
+            const y = d3.scaleLinear()
+                .range([height, 0]);
 
-            const links = [
-                {source: "NEOM", target: "The Line"},
-                {source: "NEOM", target: "Oxagon"},
-                {source: "NEOM", target: "Trojena"},
-                {source: "NEOM", target: "Renewable Energy"},
-                {source: "NEOM", target: "Tourism"},
-                {source: "NEOM", target: "Technology"},
-                {source: "The Line", target: "Technology"},
-                {source: "Oxagon", target: "Renewable Energy"},
-                {source: "Trojena", target: "Tourism"}
-            ];
+            const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-            const simulation = d3.forceSimulation(nodes)
-                .force("link", d3.forceLink(links).id(d => d.id))
-                .force("charge", d3.forceManyBody().strength(-50))
-                .force("center", d3.forceCenter(width / 2, height / 2));
+            const area = d3.area()
+                .x(d => x(d.data.date))
+                .y0(d => y(d[0]))
+                .y1(d => y(d[1]));
 
-            const link = svg.append("g")
-                .selectAll("line")
-                .data(links)
-                .enter().append("line")
-                .attr("stroke", "#999")
-                .attr("stroke-opacity", 0.6);
+            const stack = d3.stack()
+                .keys(data.columns.slice(1));
 
-            const node = svg.append("g")
-                .selectAll("circle")
-                .data(nodes)
-                .enter().append("circle")
-                .attr("r", 5)
-                .attr("fill", d => d3.schemeCategory10[d.group]);
+            x.domain(d3.extent(data, d => d.date));
+            y.domain([0, d3.max(data, d => d.total)]);
 
-            node.append("title")
-                .text(d => d.id);
-
-            simulation.on("tick", () => {
-                link
-                    .attr("x1", d => d.source.x)
-                    .attr("y1", d => d.source.y)
-                    .attr("x2", d => d.target.x)
-                    .attr("y2", d => d.target.y);
-
-                node
-                    .attr("cx", d => d.x)
-                    .attr("cy", d => d.y);
-            });
-        }
-
-        // Add an interactive treemap
-        function addInteractiveTreemap() {
-            const treemapContainer = document.createElement('div');
-            treemapContainer.style.position = 'fixed';
-            treemapContainer.style.top = '50%';
-            treemapContainer.style.left = '50%';
-            treemapContainer.style.transform = 'translate(-50%, -50%)';
-            treemapContainer.style.width = '600px';
-            treemapContainer.style.height = '400px';
-            treemapContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-            treemapContainer.style.borderRadius = '10px';
-            treemapContainer.style.display = 'none';
-            document.body.appendChild(treemapContainer);
-
-            const width = 600;
-            const height = 400;
-
-            const svg = d3.select(treemapContainer)
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height);
-
-            const data = {
-                name: "NEOM",
-                children: [
-                    {
-                        name: "The Line",
-                        children: [
-                            {name: "Residential", value: 40},
-                            {name: "Commercial", value: 30},
-                            {name: "Green Spaces", value: 30}
-                        ]
-                    },
-                    {
-                        name: "Oxagon",
-                        children: [
-                            {name: "Industrial", value: 50},
-                            {name: "Research", value: 30},
-                            {name: "Logistics", value: 20}
-                        ]
-                    },
-                    {
-                        name: "Trojena",
-                        children: [
-                            {name: "Tourism", value: 40},
-                            {name: "Sports", value: 40},
-                            {name: "Entertainment", value: 20}
-                        ]
-                    }
-                ]
-            };
-
-            const treemap = d3.treemap()
-                .size([width, height])
-                .padding(1);
-
-            const root = d3.hierarchy(data)
-                .sum(d => d.value);
-
-            treemap(root);
-
-            const cell = svg.selectAll("g")
-                .data(root.leaves())
+            const layer = g.selectAll(".layer")
+                .data(stack(data))
                 .enter().append("g")
-                .attr("transform", d => `translate(${d.x0},${d.y0})`);
+                .attr("class", "layer");
 
-            cell.append("rect")
-                .attr("width", d => d.x1 - d.x0)
-                .attr("height", d => d.y1 - d.y0)
-                .attr("fill", d => d3.schemeCategory10[d.parent.data.name.length % 10]);
+            layer.append("path")
+                .attr("class", "area")
+                .style("fill", (d, i) => color(i))
+                .attr("d", area);
 
-            cell.append("text")
-                .attr("x", 5)
-                .attr("y", 15)
-                .text(d => d.data.name)
-                .attr("font-size", "12px")
-                .attr("fill", "white");
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x));
 
-            // Toggle treemap visibility
-            const toggleButton = document.createElement('button');
-            toggleButton.textContent = 'Toggle Treemap';
-            toggleButton.style.position = 'fixed';
-            toggleButton.style.top = '10px';
-            toggleButton.style.left = '50%';
-            toggleButton.style.transform = 'translateX(-50%)';
-            document.body.appendChild(toggleButton);
+            g.append("g")
+                .call(d3.axisLeft(y));
 
-            toggleButton.addEventListener('click', () => {
-                treemapContainer.style.display = treemapContainer.style.display === 'none' ? 'block' : 'none';
-            });
+            // Add chart title
+            svg.append("text")
+                .attr("x", width / 2 + margin.left)
+                .attr("y", margin.top / 2)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("fill", "#ffffff")
+                .text(options.title);
+
+            // Add animations
+            layer.selectAll("path")
+                .attr("opacity", 0)
+                .transition()
+                .duration(1000)
+                .attr("opacity", 1);
+
+            // Add interactivity
+            layer.selectAll("path")
+                .on("mouseover", function(event, d) {
+                    d3.select(this).attr("opacity", 0.8);
+                    showTooltip(event, `${d.key}: ${d3.sum(d, dd => dd[1] - dd[0])}`);
+                })
+                .on("mouseout", function() {
+                    d3.select(this).attr("opacity", 1);
+                    hideTooltip();
+                });
         }
 
-        // Add a radar chart for NEOM's key performance indicators
-        function addRadarChart() {
-            const radarContainer = document.createElement('div');
-            radarContainer.style.position = 'fixed';
-            radarContainer.style.bottom = '20px';
-            radarContainer.style.right = '20px';
-            radarContainer.style.width = '300px';
-            radarContainer.style.height = '300px';
-            radarContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-            radarContainer.style.borderRadius = '10px';
-            document.body.appendChild(radarContainer);
+        function showTooltip(event, text) {
+            const tooltip = d3.select("#tooltip");
+            tooltip.style("opacity", 1)
+                .html(text)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 10) + "px");
+        }
 
-            const width = 300;
-            const height = 300;
-            const margin = {top: 20, right: 20, bottom: 20, left: 20};
-            const chartWidth = width - margin.left - margin.right;
-            const chartHeight = height - margin.top - margin.bottom;
+        function hideTooltip() {
+            d3.select("#tooltip").style("opacity", 0);
+        }
 
-            const svg = d3.select(radarContainer)
-                .append("svg")
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", `translate(${width/2},${height/2})`);
+        function createCharts() {
+            // Saudi vs Malaysia Projects
+            createChart("saudi-malaysia-chart", "bar", [
+                {label: "NEOM", value: 500},
+                {label: "Forest City", value: 100},
+                {label: "Bandar Malaysia", value: 33},
+                {label: "TRX", value: 10}
+            ], {title: "Project Investment (Billion USD)", color: "#00ffff"});
 
-            const features = ["Innovation", "Sustainability", "Technology", "Quality of Life", "Economic Impact"];
+            // NEOM vs UAE Projects
+            createChart("neom-uae-chart", "bar", [
+                {label: "NEOM", value: 500},
+                {label: "Dubai Creek Harbour", value: 20},
+                {label: "Yas Island", value: 40},
+                {label: "Saadiyat Island", value: 27}
+            ], {title: "Project Investment (Billion USD)", color: "#ff00ff"});
 
-            const data = [
+            // Investment Timeline
+            createChart("investment-timeline-chart", "line", [
+                {date: new Date(2020, 0, 1), value: 10},
+                {date: new Date(2022, 0, 1), value: 50},
+                {date: new Date(2024, 0, 1), value: 150},
+                {date: new Date(2026, 0, 1), value: 300},
+                {date: new Date(2028, 0, 1), value: 450},
+                {date: new Date(2030, 0, 1), value: 500}
+            ], {title: "Cumulative Investment (Billion USD)", color: "#00ff00"});
+
+            // Job Creation Forecast
+            createChart("job-creation-chart", "line", [
+                {date: new Date(2025, 0, 1), value: 50000},
+                {date: new Date(2026, 0, 1), value: 100000},
+                {date: new Date(2027, 0, 1), value: 180000},
+                {date: new Date(2028, 0, 1), value: 280000},
+                {date: new Date(2029, 0, 1), value: 380000},
+                {date: new Date(2030, 0, 1), value: 500000}
+            ], {title: "Jobs Created", color: "#ff8c00"});
+
+            // Tourism Growth
+            createChart("tourism-growth-chart", "line", [
+                {date: new Date(2025, 0, 1), value: 1},
+                {date: new Date(2026, 0, 1), value: 2},
+                {date: new Date(2027, 0, 1), value: 4},
+                {date: new Date(2028, 0, 1), value: 7},
+                {date: new Date(2029, 0, 1), value: 11},
+                {date: new Date(2030, 0, 1), value: 15}
+            ], {title: "Annual Visitors (Millions)", color: "#4169e1"});
+
+            // Renewable Energy Adoption
+            createChart("renewable-energy-chart", "line", [
+                {date: new Date(2025, 0, 1), value: 20},
+                {date: new Date(2026, 0, 1), value: 35},
+                {date: new Date(2027, 0, 1), value: 50},
+                {date: new Date(2028, 0, 1), value: 70},
+                {date: new Date(2029, 0, 1), value: 85},
+                {date: new Date(2030, 0, 1), value: 100}
+            ], {title: "Renewable Energy Share (%)", color: "#32cd32"});
+
+            // Foreign Direct Investment
+            createChart("fdi-chart", "bar", [
+                {label: "2025", value: 5},
+                {label: "2026", value: 8},
+                {label: "2027", value: 12},
+                {label: "2028", value: 18},
+                {label: "2029", value: 25},
+                {label: "2030", value: 35}
+            ], {title: "FDI Inflows (Billion USD)", color: "#daa520"});
+
+            // Economic Diversification
+            createChart("diversification-chart", "stacked", [
+                {date: new Date(2020, 0, 1), Oil: 70, Tourism: 5, Technology: 10, Manufacturing: 15},
+                {date: new Date(2022, 0, 1), Oil: 65, Tourism: 8, Technology: 12, Manufacturing: 15},
+                {date: new Date(2024, 0, 1), Oil: 60, Tourism: 10, Technology: 15, Manufacturing: 15},
+                {date: new Date(2026, 0, 1), Oil: 55, Tourism: 12, Technology: 18, Manufacturing: 15},
+                {date: new Date(2028, 0, 1), Oil: 50, Tourism: 15, Technology: 20, Manufacturing: 15},
+                {date: new Date(2030, 0, 1), Oil: 45, Tourism: 18, Technology: 22, Manufacturing: 15}
+            ], {title: "Economic Sector Contribution (%)"});
+
+            // NEOM vs Other Megaprojects
+            createChart("megaprojects-comparison-chart", "bar", [
+                {label: "NEOM", value: 500},
+                {label: "Songdo IBD", value: 40},
+                {label: "Masdar City", value: 22},
+                {label: "King Abdullah Economic City", value: 100}
+            ], {title: "Project Cost (Billion USD)", color: "#ba55d3"});
+
+            // Smart City Index
+            createChart("smart-city-chart", "radar", [
                 {
                     name: "NEOM",
-                    scores: [0.9, 0.8, 0.95, 0.85, 0.9]
+                    axes: [
+                        {axis: "Technology", value: 9.5},
+                        {axis: "Sustainability", value: 9.8},
+                        {axis: "Governance", value: 8.5},
+                        {axis: "Mobility", value: 9.2},
+                        {axis: "Living", value: 9.0},
+                        {axis: "Economy", value: 9.3}
+                    ]
                 },
                 {
                     name: "Global Average",
-                    scores: [0.6, 0.5, 0.7, 0.65, 0.55]
+                    axes: [
+                        {axis: "Technology", value: 7.0},
+                        {axis: "Sustainability", value: 6.5},
+                        {axis: "Governance", value: 6.8},
+                        {axis: "Mobility", value: 7.2},
+                        {axis: "Living", value: 7.5},
+                        {axis: "Economy", value: 7.0}
+                    ]
+                }
+            ], {title: "Smart City Index", colors: ["#00ffff", "#ff00ff"]});
+
+            // NEOM Regions Comparison
+            createChart("neom-regions-chart", "pie", [
+                {label: "The Line", value: 40},
+                {label: "Oxagon", value: 30},
+                {label: "Trojena", value: 20},
+                {label: "Sindalah", value: 5},
+                {label: "Magna", value: 5}
+            ], {title: "NEOM Regions Distribution"});
+        }
+
+        function setupQuiz() {
+            const quizData = [
+                {
+                    question: "What is the estimated cost of the NEOM project?",
+                    options: ["$100 billion", "$300 billion", "$500 billion", "$700 billion"],
+                    correct: 2
+                },
+                {
+                    question: "By which year is NEOM expected to be fully operational?",
+                    options: ["2025", "2030", "2035", "2040"],
+                    correct: 1
+                },
+                {
+                    question: "Which of the following is NOT a part of NEOM?",
+                    options: ["The Line", "Oxagon", "Trojena", "Palm Jumeirah"],
+                    correct: 3
+                },
+                {
+                    question: "What percentage of NEOM's energy is planned to come from renewable sources?",
+                    options: ["50%", "75%", "90%", "100%"],
+                    correct: 3
+                },
+                {
+                    question: "How many square kilometers is NEOM expected to cover?",
+                    options: ["10,000", "26,500", "50,000", "100,000"],
+                    correct: 1
                 }
             ];
 
-            const radialScale = d3.scaleLinear()
-                .domain([0, 1])
-                .range([0, chartWidth/2]);
+            let currentQuestion = 0;
 
-            const angleScale = d3.scaleOrdinal()
-                .domain(features)
-                .range([0, 2*Math.PI/5, 4*Math.PI/5, 6*Math.PI/5, 8*Math.PI/5]);
+            function loadQuestion() {
+                const questionElement = document.getElementById("quiz-question");
+                const optionsElement = document.getElementById("quiz-options");
 
-            features.forEach(feature => {
-                const ftData = data.map(d => d.scores[features.indexOf(feature)]);
-                const lineCoordinates = ftData.map((_, i) => angleToCoordinate(angleScale(feature), ftData[i]));
+                questionElement.textContent = quizData[currentQuestion].question;
+                optionsElement.innerHTML = "";
 
-                svg.append("path")
-                    .datum(lineCoordinates)
-                    .attr("d", d3.line())
-                    .attr("stroke-width", 1.5)
-                    .attr("stroke", (_, i) => d3.schemeCategory10[i])
-                    .attr("fill", "none");
-            });
-
-            function angleToCoordinate(angle, value) {
-                const x = Math.cos(angle - Math.PI/2) * radialScale(value);
-                const y = Math.sin(angle - Math.PI/2) * radialScale(value);
-                return {x: x, y: y};
+                quizData[currentQuestion].options.forEach((option, index) => {
+                    const button = document.createElement("button");
+                    button.textContent = option;
+                    button.classList.add("quiz-option");
+                    button.addEventListener("click", () => checkAnswer(index));
+                    optionsElement.appendChild(button);
+                });
             }
 
-            // Add axis lines
-            features.forEach(feature => {
-                const angle = angleScale(feature);
-                const lineCoordinate = angleToCoordinate(angle, 1);
-                svg.append("line")
-                    .attr("x1", 0)
-                    .attr("y1", 0)
-                    .attr("x2", lineCoordinate.x)
-                    .attr("y2", lineCoordinate.y)
-                    .attr("stroke", "white")
-                    .attr("stroke-opacity", 0.3);
+            function checkAnswer(selectedIndex) {
+                const correctIndex = quizData[currentQuestion].correct;
+                const options = document.querySelectorAll(".quiz-option");
 
-                svg.append("text")
-                    .attr("x", lineCoordinate.x * 1.1)
-                    .attr("y", lineCoordinate.y * 1.1)
-                    .attr("text-anchor", "middle")
-                    .attr("fill", "white")
-                    .text(feature);
-            });
-        }
-
-        // Add these new functions to the initializeAllComponents function
-        function initializeAllComponents() {
-            // ... (previous initializations)
-            safeExecute(addDynamicPieChart);
-            safeExecute(addForceDirectedGraph);
-            safeExecute(addInteractiveTreemap);
-            safeExecute(addRadarChart);
-        }
-
-        // Make sure to call initializeAllComponents when the window loads
-        window.addEventListener('load', () => {
-            safeExecute(initializeAllComponents);
-        });
-
-        // Add a function to check if WebGL is available for more advanced visualizations
-        function checkWebGLAvailability() {
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-            return gl instanceof WebGLRenderingContext;
-        }
-
-        // If WebGL is available, add a 3D globe visualization
-        if (checkWebGLAvailability()) {
-            function add3DGlobe() {
-                const globeContainer = document.createElement('div');
-                globeContainer.style.position = 'fixed';
-                globeContainer.style.top = '50%';
-                globeContainer.style.left = '50%';
-                globeContainer.style.transform = 'translate(-50%, -50%)';
-                globeContainer.style.width = '500px';
-                globeContainer.style.height = '500px';
-                globeContainer.style.display = 'none';
-                document.body.appendChild(globeContainer);
-
-                const globe = new Globe({
-                    container: globeContainer,
-                    animateIn: false
-                });
-
-                globe.globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
-                globe.bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png');
-
-                const toggleButton = document.createElement('button');
-                toggleButton.textContent = 'Toggle 3D Globe';
-                toggleButton.style.position = 'fixed';
-                toggleButton.style.bottom = '10px';
-                toggleButton.style.left = '50%';
-                toggleButton.style.transform = 'translateX(-50%)';
-                document.body.appendChild(toggleButton);
-
-                toggleButton.addEventListener('click', () => {
-                    globeContainer.style.display = globeContainer.style.display === 'none' ? 'block' : 'none';
-                });
-
-                // Add NEOM location to the globe
-                const neomCoordinates = { lat: 28.0, lng: 35.0 };
-                globe.labelsData([{
-                    lat: neomCoordinates.lat,
-                    lng: neomCoordinates.lng,
-                    text: 'NEOM'
-                }]);
-
-                                globe.labelColor(() => '#00ffff')
-                    .labelSize(0.05)
-                    .labelText('text')
-                    .labelResolution(3);
-
-                // Add arc to show connection between NEOM and major cities
-                const arcsData = [
-                    {
-                        startLat: neomCoordinates.lat,
-                        startLng: neomCoordinates.lng,
-                        endLat: 51.5074,
-                        endLng: -0.1278,
-                        color: '#00ffff'
-                    },
-                    {
-                        startLat: neomCoordinates.lat,
-                        startLng: neomCoordinates.lng,
-                        endLat: 40.7128,
-                        endLng: -74.0060,
-                        color: '#00ffff'
-                    },
-                    {
-                        startLat: neomCoordinates.lat,
-                        startLng: neomCoordinates.lng,
-                        endLat: 35.6762,
-                        endLng: 139.6503,
-                        color: '#00ffff'
+                options.forEach((option, index) => {
+                    if (index === correctIndex) {
+                        option.style.backgroundColor = "#00ff00";
+                    } else if (index === selectedIndex) {
+                        option.style.backgroundColor = "#ff0000";
                     }
-                ];
-
-                globe.arcsData(arcsData)
-                    .arcColor('color')
-                    .arcDashLength(0.4)
-                    .arcDashGap(0.2)
-                    .arcDashAnimateTime(1500);
-
-                // Rotate the globe
-                globe.controls().autoRotate = true;
-                globe.controls().autoRotateSpeed = 0.5;
-
-                // Ensure the globe fits in the container
-                window.addEventListener('resize', () => {
-                    globe.width(globeContainer.offsetWidth);
-                    globe.height(globeContainer.offsetHeight);
+                    option.disabled = true;
                 });
-            }
 
-            // Add the 3D globe to the initialization
-            initializeAllComponents = function() {
-                // ... (previous initializations)
-                safeExecute(add3DGlobe);
-            };
-        }
-
-        // Add a smooth scrolling function for navigation
-        function smoothScroll(target, duration) {
-            const targetElement = document.querySelector(target);
-            const targetPosition = targetElement.getBoundingClientRect().top;
-            const startPosition = window.pageYOffset;
-            let startTime = null;
-
-            function animation(currentTime) {
-                if (startTime === null) startTime = currentTime;
-                const timeElapsed = currentTime - startTime;
-                const run = ease(timeElapsed, startPosition, targetPosition, duration);
-                window.scrollTo(0, run);
-                if (timeElapsed < duration) requestAnimationFrame(animation);
-            }
-
-            function ease(t, b, c, d) {
-                t /= d / 2;
-                if (t < 1) return c / 2 * t * t + b;
-                t--;
-                return -c / 2 * (t * (t - 2) - 1) + b;
-            }
-
-            requestAnimationFrame(animation);
-        }
-
-        // Add smooth scrolling to navigation buttons
-        document.querySelectorAll('.nav-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = this.getAttribute('href');
-                smoothScroll(target, 1000);
-            });
-        });
-
-        // Add a progress bar for scroll position
-        function addScrollProgressBar() {
-            const progressBar = document.createElement('div');
-            progressBar.style.position = 'fixed';
-            progressBar.style.top = '0';
-            progressBar.style.left = '0';
-            progressBar.style.width = '0%';
-            progressBar.style.height = '3px';
-            progressBar.style.backgroundColor = '#00ffff';
-            progressBar.style.zIndex = '1000';
-            progressBar.style.transition = 'width 0.2s';
-            document.body.appendChild(progressBar);
-
-            window.addEventListener('scroll', () => {
-                const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-                progressBar.style.width = `${scrollPercentage}%`;
-            });
-        }
-
-        // Add scroll-triggered animations
-        function addScrollTriggeredAnimations() {
-            const elements = document.querySelectorAll('.animate-on-scroll');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animated');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            elements.forEach(element => {
-                observer.observe(element);
-            });
-        }
-
-        // Add a floating action button for quick navigation
-        function addFloatingActionButton() {
-            const fab = document.createElement('button');
-            fab.textContent = '↑';
-            fab.style.position = 'fixed';
-            fab.style.bottom = '20px';
-            fab.style.right = '20px';
-            fab.style.width = '50px';
-            fab.style.height = '50px';
-            fab.style.borderRadius = '50%';
-            fab.style.backgroundColor = '#00ffff';
-            fab.style.color = '#000033';
-            fab.style.border = 'none';
-            fab.style.fontSize = '24px';
-            fab.style.cursor = 'pointer';
-            fab.style.display = 'none';
-            fab.style.transition = 'opacity 0.3s';
-            document.body.appendChild(fab);
-
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    fab.style.display = 'block';
-                    setTimeout(() => fab.style.opacity = '1', 0);
-                } else {
-                    fab.style.opacity = '0';
-                    setTimeout(() => fab.style.display = 'none', 300);
-                }
-            });
-
-            fab.addEventListener('click', () => {
-                smoothScroll('body', 1000);
-            });
-        }
-
-        // Add these new functions to the initialization
-        initializeAllComponents = function() {
-            // ... (previous initializations)
-            safeExecute(addScrollProgressBar);
-            safeExecute(addScrollTriggeredAnimations);
-            safeExecute(addFloatingActionButton);
-        };
-
-        // Optimize performance by debouncing scroll events
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Use debounced scroll handler for performance-intensive operations
-        const debouncedScrollHandler = debounce(() => {
-            // Perform any heavy scroll-based operations here
-        }, 100);
-
-        window.addEventListener('scroll', debouncedScrollHandler);
-
-        // Add a loading animation
-        function addLoadingAnimation() {
-            const loadingOverlay = document.createElement('div');
-            loadingOverlay.style.position = 'fixed';
-            loadingOverlay.style.top = '0';
-            loadingOverlay.style.left = '0';
-            loadingOverlay.style.width = '100%';
-            loadingOverlay.style.height = '100%';
-            loadingOverlay.style.backgroundColor = '#000033';
-            loadingOverlay.style.display = 'flex';
-            loadingOverlay.style.justifyContent = 'center';
-            loadingOverlay.style.alignItems = 'center';
-            loadingOverlay.style.zIndex = '9999';
-
-            const spinner = document.createElement('div');
-            spinner.style.width = '50px';
-            spinner.style.height = '50px';
-            spinner.style.border = '3px solid #00ffff';
-            spinner.style.borderTop = '3px solid transparent';
-            spinner.style.borderRadius = '50%';
-            spinner.style.animation = 'spin 1s linear infinite';
-            loadingOverlay.appendChild(spinner);
-
-            document.body.appendChild(loadingOverlay);
-
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `;
-            document.head.appendChild(style);
-
-            window.addEventListener('load', () => {
                 setTimeout(() => {
-                    loadingOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingOverlay.remove();
-                    }, 500);
-                }, 1000);
+                    currentQuestion++;
+                    if (currentQuestion < quizData.length) {
+                        loadQuestion();
+                    } else {
+                        document.getElementById("quiz-question").textContent = "Quiz completed!";
+                        document.getElementById("quiz-options").innerHTML = "";
+                    }
+                }, 2000);
+            }
+
+            loadQuestion();
+        }
+
+        function createTimeline() {
+            const timelineData = [
+                {year: 2017, event: "NEOM announced"},
+                {year: 2019, event: "NEOM Bay Airport opened"},
+                {year: 2020, event: "The Line unveiled"},
+                {year: 2021, event: "Oxagon industrial city announced"},
+                {year: 2022, event: "Trojena mountain resort revealed"},
+                {year: 2025, event: "First NEOM zone to be completed"},
+                {year: 2030, event: "NEOM fully operational"}
+            ];
+
+            const timeline = d3.select("#neom-timeline");
+            const width = timeline.node().getBoundingClientRect().width;
+
+            const x = d3.scaleLinear()
+                .domain([2017, 2030])
+                .range([0, width]);
+
+            timelineData.forEach(d => {
+                const event = timeline.append("div")
+                    .attr("class", "timeline-event")
+                    .style("left", `${x(d.year)}px`)
+                    .style("top", "50%")
+                    .on("mouseover", function(event) {
+                        const tooltip = timeline.append("div")
+                            .attr("class", "timeline-tooltip")
+                            .style("left", `${x(d.year)}px`)
+                            .style("top", "0")
+                            .text(`${d.year}: ${d.event}`);
+                        tooltip.style("opacity", 1);
+                    })
+                    .on("mouseout", function() {
+                        timeline.select(".timeline-tooltip").remove();
+                    });
             });
         }
 
-        // Add the loading animation to the initialization
-        initializeAllComponents = function() {
-            safeExecute(addLoadingAnimation);
-            // ... (previous initializations)
-        };
+        function toggleMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        function animateNumbers() {
+            const numbers = document.querySelectorAll(".animate-number");
+            numbers.forEach(number => {
+                const target = parseInt(number.getAttribute("data-target"));
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+
+                const timer = setInterval(() => {
+                    current += step;
+                    number.textContent = Math.round(current);
+                    if (current >= target) {
+                        clearInterval(timer);
+                        number.textContent = target;
+                    }
+                }, 16);
+            });
+        }
+
+        function createInteractiveMap() {
+            const mapContainer = d3.select("#neom-map");
+            const width = mapContainer.node().getBoundingClientRect().width;
+            const height = 400;
+
+            const svg = mapContainer.append("svg")
+                                .attr("width", width)
+                .attr("height", height);
+
+            // Add a background image for the map
+            svg.append("image")
+                .attr("xlink:href", "https://www.neom.com/content/dam/neom/images/maps/neom-map.png") // Placeholder for NEOM map
+                .attr("width", width)
+                .attr("height", height);
+
+            // Define locations for NEOM projects
+            const locations = [
+                { name: "The Line", coordinates: [35.0, 28.0] },
+                { name: "Oxagon", coordinates: [35.1, 28.1] },
+                { name: "Trojena", coordinates: [35.2, 28.2] },
+                { name: "Sindalah", coordinates: [35.3, 28.3] },
+                { name: "Magna", coordinates: [35.4, 28.4] }
+            ];
+
+            // Add markers for each project
+            locations.forEach(location => {
+                const [lng, lat] = location.coordinates;
+                const marker = svg.append("circle")
+                    .attr("cx", (lng - 34.0) * 1000) // Adjust scaling for map coordinates
+                    .attr("cy", (28.5 - lat) * 1000) // Adjust scaling for map coordinates
+                    .attr("r", 5)
+                    .attr("fill", "#00ffff")
+                    .attr("class", "map-marker")
+                    .on("mouseover", function(event) {
+                        showTooltip(event, location.name);
+                    })
+                    .on("mouseout", hideTooltip);
+            });
+
+            // Add an event listener for resizing the map
+            window.addEventListener('resize', () => {
+                svg.attr("width", mapContainer.node().getBoundingClientRect().width)
+                   .attr("height", height);
+            });
+        }
+
+        // Initialize all components
+        function initializeAllComponents() {
+            createComparisonChart();
+            createSectorsChart();
+            createTimelineChart();
+            createJobsChart();
+            createTourismChart();
+            createEnergyChart();
+            createSmartCityChart();
+            createDiversificationChart();
+            createFDIChart();
+            createRadarChart();
+            createStackedAreaChart();
+            createInteractiveMap();
+            createDynamicPieChart();
+            createForceDirectedGraph();
+            createInteractiveTreemap();
+            addShootingStars();
+            addParticles();
+            addBackgroundAnimation();
+            addFloatingActionButton();
+            addQuiz();
+            addScrollProgressBar();
+            addDayNightCycle();
+            addWordCloud();
+            addNewsTicker();
+            addInteractiveDataPoints();
+            addVision2030ProgressBar();
+            addTimeline();
+            addDynamicBackground();
+            addPulsatingEffect();
+            addSocialSharing();
+            addChatbot();
+            add3DGlobe();
+            addFloatingLogo();
+            addInteractiveTimeline();
+            addScrollTriggeredAnimations();
+        }
 
         // Call the initialization function
-        initializeAllComponents();
+        window.addEventListener('load', () => {
+            initializeAllComponents();
+        });
+
+        // Ensure everything works
+        function ensureEverythingWorks() {
+            // Check for console errors
+            console.log("Initialization complete. Check for any console errors.");
+        }
+
+        // Call the function to ensure everything works
+        ensureEverythingWorks();
 
     </script>
 </body>
