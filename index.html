@@ -3,89 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive NEOM Map</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <title>NEOM Interactive Map</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #000033;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #001f3f;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        h1, h2 {
-            color: #00ffff;
-            text-align: center;
-        }
-        #map {
-            height: 600px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        .info {
-            background-color: #000055;
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
             padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-        }
-        .info h4 {
-            margin: 0;
-            color: #00ffff;
+            font-family: Arial, sans-serif;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Interactive NEOM Map</h1>
-        <h2>Explore NEOM's Economic Focus Areas</h2>
-        <div id="map"></div>
-        <div class="info">
-            <h4>Click on a region to learn more!</h4>
-        </div>
+    <div id="map"></div>
+    <div class="map-overlay">
+        <h2>NEOM Interactive Map</h2>
+        <p>Click on regions to learn more</p>
     </div>
 
     <script>
-        // Initialize the map
-        var map = L.map('map').setView([28.0, 35.0], 7);
-
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Define NEOM regions with coordinates and economic focus
-        var regions = [
-            {name: "The Line", coords: [28.1, 35.0], focus: "Urban living and innovation"},
-            {name: "Oxagon", coords: [27.8, 34.7], focus: "Advanced and clean industries"},
-            {name: "Trojena", coords: [28.3, 35.5], focus: "Mountain tourism and sports"},
-            {name: "Sindalah", coords: [27.9, 34.6], focus: "Luxury tourism and yachting"}
-        ];
-
-        // Add markers for each region
-        regions.forEach(function(region) {
-            L.marker(region.coords).addTo(map)
-                .bindPopup("<b>" + region.name + "</b><br>Focus: " + region.focus)
-                .openPopup();
+        mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/satellite-v9',
+            center: [35.0, 28.0],
+            zoom: 7
         });
 
-        // Add a rectangle to outline NEOM's approximate boundaries
-        var neomBounds = L.latLngBounds(
-            L.latLng(27.5, 34.3),  // Southwest corner
-            L.latLng(29.0, 36.0)   // Northeast corner
-        );
+        map.on('load', () => {
+            // Add 3D terrain
+            map.addSource('mapbox-dem', {
+                'type': 'raster-dem',
+                'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                'tileSize': 512,
+                'maxzoom': 14
+            });
+            map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
 
-        L.rectangle(neomBounds, {color: "#ff7800", weight: 1, fillOpacity: 0.1}).addTo(map);
+            // Add custom layers for NEOM regions here
+            // Example:
+            map.addSource('neom-regions', {
+                'type': 'geojson',
+                'data': {
+                    'type': 'FeatureCollection',
+                    'features': [
+                        {
+                            'type': 'Feature',
+                            'geometry': {
+                                'type': 'Polygon',
+                                'coordinates': [[
+                                    [34.3, 27.5],
+                                    [36.0, 27.5],
+                                    [36.0, 29.0],
+                                    [34.3, 29.0],
+                                    [34.3, 27.5]
+                                ]]
+                            },
+                            'properties': {
+                                'name': 'NEOM',
+                                'description': 'The future of urban living'
+                            }
+                        }
+                        // Add more regions here
+                    ]
+                }
+            });
+
+            map.addLayer({
+                'id': 'neom-regions-layer',
+                'type': 'fill',
+                'source': 'neom-regions',
+                'paint': {
+                    'fill-color': 'rgba(0, 255, 255, 0.2)',
+                    'fill-outline-color': 'rgba(0, 255, 255, 1)'
+                }
+            });
+
+            // Add interactivity
+            map.on('click', 'neom-regions-layer', (e) => {
+                new mapboxgl.Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML(`<h3>${e.features[0].properties.name}</h3><p>${e.features[0].properties.description}</p>`)
+                    .addTo(map);
+            });
+
+            map.on('mouseenter', 'neom-regions-layer', () => {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            map.on('mouseleave', 'neom-regions-layer', () => {
+                map.getCanvas().style.cursor = '';
+            });
+        });
     </script>
 </body>
 </html>
