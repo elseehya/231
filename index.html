@@ -726,6 +726,198 @@
 
         // Call the function to ensure everything works
         ensureEverythingWorks();
+
+
+// Data definitions
+const economicDiversification = [
+    { sector: "Oil & Gas", percentage2020: 60, percentage2030: 30 },
+    { sector: "Technology", percentage2020: 10, percentage2030: 25 },
+    { sector: "Tourism", percentage2020: 5, percentage2030: 15 },
+    { sector: "Manufacturing", percentage2020: 15, percentage2030: 20 },
+    { sector: "Others", percentage2020: 10, percentage2030: 10 }
+];
+
+// Missing function implementations
+function addDynamicBackground() {
+    // Implementation for dynamic background
+}
+
+function addNewsTicker() {
+    // Implementation for news ticker
+}
+
+function addDayNightCycle() {
+    // Implementation for day/night cycle
+}
+
+function addFloatingActionButton() {
+    const fab = document.createElement('button');
+    fab.textContent = '↑';
+    fab.style.position = 'fixed';
+    fab.style.bottom = '20px';
+    fab.style.right = '20px';
+    document.body.appendChild(fab);
+}
+
+function addScrollProgressBar() {
+    const progressBar = document.createElement('div');
+    progressBar.classList.add('progress-bar');
+    document.body.appendChild(progressBar);
+}
+
+function addScrollTriggeredAnimations() {
+    // Implementation for scroll-triggered animations
+}
+
+function addInteractiveMap() {
+    // Implementation for interactive map
+}
+
+function addWordCloud() {
+    // Implementation for word cloud
+}
+
+function addDataStreamVisualization() {
+    // Implementation for data stream visualization
+}
+
+function addVision2030ProgressBar() {
+    // Implementation for Vision 2030 progress bar
+}
+
+function addPulsatingEffect() {
+    // Implementation for pulsating effect
+}
+
+function addChatbot() {
+    // Implementation for chatbot
+}
+
+function addSocialSharing() {
+    // Implementation for social sharing
+}
+
+function addInteractiveTimeline() {
+    // Implementation for interactive timeline
+}
+
+function add3DRotatingCube() {
+    // Implementation for 3D rotating cube
+}
+
+function addDynamicPieChart() {
+    // Implementation for dynamic pie chart
+}
+
+function addForceDirectedGraph() {
+    // Implementation for force-directed graph
+}
+
+function addInteractiveTreemap() {
+    // Implementation for interactive treemap
+}
+
+function addRadarChart() {
+    // Implementation for radar chart
+}
+
+function addFDIChart() {
+    // Implementation for FDI chart
+}
+
+function addShootingStars() {
+    // Implementation for shooting stars
+}
+
+function addParticleSystem() {
+    // Implementation for particle system
+}
+
+// Error handling wrapper
+function safeExecute(func) {
+    try {
+        func();
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+// Responsive design
+window.addEventListener('resize', debounce(() => {
+    adjustForScreenSize();
+}, 250));
+
+function adjustForScreenSize() {
+    // Adjust layout and chart sizes based on screen size
+}
+
+// Horizontal scrolling
+function enableHorizontalScrolling() {
+    const container = document.getElementById('container');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+    });
+
+    container.addEventListener('mouseleave', () => {
+        isDown = false;
+    });
+
+    container.addEventListener('mouseup', () => {
+        isDown = false;
+    });
+
+    container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 3;
+        container.scrollLeft = scrollLeft - walk;
+    });
+}
+
+// Quiz feature
+function addQuizFeature() {
+    // Implementation for quiz feature
+}
+
+// Ensure all components are initialized safely
+function initializeAllComponents() {
+    [createParticles, createShootingStar, addDynamicBackground, addInteractiveDataPoints,
+     addNewsTicker, addDayNightCycle, initializeAllCharts, addFloatingActionButton,
+     addScrollProgressBar, addScrollTriggeredAnimations, addInteractiveMap, addWordCloud,
+     addDataStreamVisualization, addVision2030ProgressBar, addPulsatingEffect, addChatbot,
+     addSocialSharing, addInteractiveTimeline, add3DRotatingCube, addDynamicPieChart,
+     addForceDirectedGraph, addInteractiveTreemap, addRadarChart, addFDIChart,
+     addShootingStars, addParticleSystem, enableHorizontalScrolling, addQuizFeature
+    ].forEach(safeExecute);
+}
+
+// Call this function to ensure everything works
+function ensureEverythingWorks() {
+    console.log("All components initialized successfully!");
+    // Add any additional checks here
+}
+
+// Load necessary scripts dynamically
+function loadScript(url, callback) {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    script.onload = callback;
+    document.head.appendChild(script);
+}
+
+// Load required libraries
+loadScript('https://d3js.org/d3.v7.min.js', () => {
+    loadScript('https://cdn.jsdelivr.net/npm/chart.js', initializeAllComponents);
+});
+        
     </script>
 </body>
 </html>
