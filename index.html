@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <body>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         // Ensure all required variables and functions are defined
         
    {
@@ -493,6 +495,16 @@ document.querySelector('#container').style.overflowX = 'scroll'; }
 </head>
 <body>
     <div id="container">
+        <canvas id="saudiVsMalaysia"></canvas>
+<canvas id="neomVsUAE"></canvas>
+<canvas id="investmentTimeline"></canvas>
+<canvas id="jobCreation"></canvas>
+<canvas id="tourismGrowth"></canvas>
+<canvas id="renewableEnergy"></canvas>
+<canvas id="foreignInvestment"></canvas>
+<canvas id="economicDiversification"></canvas>
+<canvas id="neomProjects"></canvas>
+<canvas id="smartCityIndex"></canvas>
         <div class="section" id="intro">
             <h1>NEOM: Economic Impact and Challenges</h1>
         </div>
@@ -568,6 +580,16 @@ document.querySelector('#container').style.overflowX = 'scroll'; }
                 <div class="poster-content">
                     <h2 class="poster-title">Political Implications</h2>
                     <p class="poster-text">The development of NEOM has far-reaching political consequences...</p>
+                    <canvas id="saudiVsMalaysia"></canvas>
+<canvas id="neomVsUAE"></canvas>
+<canvas id="investmentTimeline"></canvas>
+<canvas id="jobCreation"></canvas>
+<canvas id="tourismGrowth"></canvas>
+<canvas id="renewableEnergy"></canvas>
+<canvas id="foreignInvestment"></canvas>
+<canvas id="economicDiversification"></canvas>
+<canvas id="neomProjects"></canvas>
+<canvas id="smartCityIndex"></canvas>
                 </div>
             </div>
         </div>
@@ -1221,9 +1243,9 @@ function loadScript(url, callback) {
 
 // Load required libraries
 loadScript('https://d3js.org/d3.v7.min.js', () => {
-    loadScript('https://cdn.jsdelivr.net/npm/chart.js', initializeAllComponents);
+    loadScript('https://cdn.jsdelivr.net/npm/chart.js', initializeAllComponents); console.log('All scripts loaded and executed');
 });
-        
+        console.log('All scripts loaded and executed');
     </script>
 </body>
 </html>
