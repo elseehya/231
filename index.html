@@ -9,7 +9,7 @@
         body, html {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background: linear-gradient(45deg, #001f3f, #003366, #0066cc, #0099ff);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite, backgroundPulse 5s ease-in-out infinite;
@@ -35,6 +35,10 @@
         .container {
             text-align: center;
             z-index: 10;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
         .button {
@@ -47,6 +51,7 @@
             border-radius: 30px;
             transition: all 0.3s ease;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            outline: none;
         }
 
         .button:hover {
@@ -59,6 +64,7 @@
             margin-top: 30px;
             max-width: 80%;
             opacity: 0;
+            line-height: 1.4;
         }
 
         .icon {
@@ -112,12 +118,21 @@
             "The city plans to have fully automated services and processes.",
             "NEOM will feature flying taxis and robot maids.",
             "The project includes plans for a giant artificial moon.",
-            // Add 90 more facts here to reach 100 total
+            "NEOM plans to have a fully digitalized government system.",
+            "The city aims to have the highest GDP per capita in the world.",
+            "NEOM will feature a year-round temperate climate through climate engineering.",
+            "The project plans to have the world's largest coral garden.",
+            "NEOM aims to be a global hub for innovation and technology.",
+            "The city plans to have a fully autonomous public transportation system.",
+            "NEOM will feature vertical urban farming to ensure food security.",
+            "The project aims to be a leader in water conservation and desalination.",
+            "NEOM plans to have the world's largest hydrogen production facility.",
+            "The city will feature advanced AI systems for urban management."
         ];
 
         const icons = [
             "💼", "🏗️", "🌞", "🏙️", "📊", "🗺️", "👥", "🤖", "🚁", "🌙",
-            // Add 90 more icons here to match the number of facts
+            "🖥️", "💰", "🌡️", "🐠", "🔬", "🚄", "🌱", "💧", "⚡", "🧠"
         ];
 
         let currentFactIndex = -1;
@@ -128,10 +143,9 @@
             const iconElement = document.getElementById('icon');
 
             gsap.to(button, {
-                duration: 0.8,
-                rotation: 720,
+                duration: 0.5,
                 opacity: 0,
-                scale: 0,
+                scale: 0.8,
                 ease: "power2.inOut",
                 onComplete: () => {
                     button.style.display = 'none';
@@ -177,7 +191,6 @@
                                 button.style.display = 'inline-block';
                                 gsap.to(button, {
                                     duration: 0.5,
-                                    rotation: 0,
                                     opacity: 1,
                                     scale: 1,
                                     ease: "power2.out"
@@ -190,7 +203,7 @@
         }
 
         function createFireworks() {
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 50; i++) {
                 const firework = document.createElement('div');
                 firework.classList.add('firework');
                 firework.style.left = `${50 + (Math.random() - 0.5) * 10}%`;
@@ -237,7 +250,7 @@
             });
         }
 
-        setInterval(createShootingStar, 1000);
+        setInterval(createShootingStar, 2000);
 
         document.addEventListener('mousemove', (e) => {
             const trail = document.createElement('div');
@@ -247,9 +260,9 @@
             document.body.appendChild(trail);
 
             gsap.to(trail, {
-                duration: 1,
+                duration: 0.8,
                 opacity: 0,
-                scale: 3,
+                scale: 2,
                 ease: 'power2.out',
                 onComplete: () => trail.remove()
             });
@@ -257,7 +270,7 @@
 
         gsap.to('.button', {
             duration: 1.5,
-            scale: 1.1,
+            scale: 1.05,
             repeat: -1,
             yoyo: true,
             ease: 'power1.inOut'
