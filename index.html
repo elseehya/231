@@ -1,1021 +1,605 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <body>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-       <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEOM: Economic Impact and Challenges</title>
+    <title>NEOM's Economy - Interactive Poster</title>
     <style>
-        body, html {
+        /* Reset and base styles */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: Arial, sans-serif;
-            background-color: #000033;
-            color: #ffffff;
+            background-color: #000;
+            color: #fff;
             overflow-x: hidden;
         }
-        #container {
-            width: 1100%;
-            height: 100vh;
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-        .section {
+
+        /* Main container */
+        .poster {
             width: 100vw;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             position: relative;
             overflow: hidden;
         }
-        .chart-container {
-            width: 80%;
-            height: 80%;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        .chart {
-            width: 100%;
-            height: 100%;
-        }
-        .particle {
-            position: absolute;
-            background-color: #ffffff;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .shooting-star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background-color: #ffffff;
-            opacity: 0;
-        }
-        .tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #ffffff;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-        }
-        .legend {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .legend-item {
-            cursor: pointer;
-        }
-        .time-slider {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-        }
-        .fact-bubble {
-            position: absolute;
-            background-color: rgba(0, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-        }
-        .quiz-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            display: none;
-        }
-        .poster {
-            width: 80%;
-            height: 80%;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-        .poster-content {
+
+        /* Background */
+        .background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: linear-gradient(45deg, #001f3f, #0074D9);
+            z-index: -1;
+        }
+
+        /* Stars */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.2;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Shooting star */
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: shoot 5s linear infinite;
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateX(-100%) translateY(-100%);
+            }
+            100% {
+                transform: translateX(200%) translateY(200%);
+            }
+        }
+
+        /* Title */
+        .title {
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Info sections */
+        .info-section {
+            position: absolute;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .info-section:hover {
+            transform: scale(1.05);
+        }
+
+        .info-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .info-section p {
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        /* Positioning info sections */
+        .info-section:nth-child(1) {
+            top: 20%;
+            left: 5%;
+        }
+
+        .info-section:nth-child(2) {
+            top: 20%;
+            right: 5%;
+        }
+
+        .info-section:nth-child(3) {
+            bottom: 20%;
+            left: 5%;
+        }
+
+        .info-section:nth-child(4) {
+            bottom: 20%;
+            right: 5%;
+        }
+
+        /* Did you know bubble */
+        .did-you-know {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             padding: 20px;
-            box-sizing: border-box;
-        }
-        .poster-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .poster-text {
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        .nav-dots {
-            position: fixed;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-        }
-        .nav-dot {
-            width: 10px;
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            margin: 10px 0;
             cursor: pointer;
+            transition: transform 0.3s ease-in-out;
         }
-        .nav-dot.active {
-            background-color: #ffffff;
+
+        .did-you-know:hover {
+            transform: translate(-50%, -50%) scale(1.1);
         }
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background-color: #00ffff;
+
+        .did-you-know h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
-        .mode-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: #ffffff;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
+
+        .did-you-know p {
+            font-size: 1rem;
+            line-height: 1.4;
         }
-        .timeline {
+
+        /* Interactive chart */
+        .chart-container {
             position: absolute;
-            bottom: 20px;
+            bottom: 5%;
             left: 50%;
             transform: translateX(-50%);
             width: 80%;
-            height: 3px;
-            background-color: rgba(255, 255, 255, 0.2);
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
         }
-        .timeline-event {
+
+        .chart {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Interactive map */
+        .map-container {
             position: absolute;
-            top: -5px;
-            width: 15px;
-            height: 15px;
-            background-color: #00ffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 400px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            display: none;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://example.com/neom-map.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px;
+        }
+
+        .map-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff0;
             border-radius: 50%;
             cursor: pointer;
-        // Ensure all required variables and functions are defined
-if (typeof economicDiversification === 'undefined') {
-    var economicDiversification = [
-        { sector: "Oil & Gas", percentage2020: 60, percentage2030: 30 },
-        { sector: "Technology", percentage2020: 10, percentage2030: 25 },
-        { sector: "Tourism", percentage2020: 5, percentage2030: 15 },
-        { sector: "Manufacturing", percentage2020: 15, percentage2030: 20 },
-        { sector: "Others", percentage2020: 10, percentage2030: 10 }
-    ];
-}
-
-// Define missing functions as no-ops to prevent errors
-[
-    'addDynamicBackground', 'addNewsTicker', 'addDayNightCycle', 'addFloatingActionButton',
-    'addScrollProgressBar', 'addScrollTriggeredAnimations', 'addInteractiveMap', 'addWordCloud',
-    'addDataStreamVisualization', 'addVision2030ProgressBar', 'addPulsatingEffect', 'addChatbot',
-    'addSocialSharing', 'addInteractiveTimeline', 'add3DRotatingCube', 'addDynamicPieChart',
-    'addForceDirectedGraph', 'addInteractiveTreemap', 'addRadarChart', 'addFDIChart',
-    'addShootingStars', 'addParticleSystem'
-].forEach(funcName => {
-    if (typeof window[funcName] === 'undefined') {
-        window[funcName] = function() {
-            console.log(`Function ${funcName} is not yet implemented`);
-        };
-    }
-});
-
-// Error handling
-function handleError(error) {
-    console.error("An error occurred:", error);
-}
-
-// Debounce function for performance optimization
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Safe execution wrapper
-function safeExecute(func) {
-    try {
-        if (typeof func === 'function') {
-            func();
+            transition: transform 0.3s ease-in-out;
         }
-    } catch (error) {
-        handleError(error);
-    }
-}
 
-// Modify the initializeAllComponents function
-function initializeAllComponents() {
-    [
-        createParticles, createShootingStar, addDynamicBackground, addInteractiveDataPoints,
-        addNewsTicker, addDayNightCycle, initializeAllCharts, addFloatingActionButton,
-        addScrollProgressBar, addScrollTriggeredAnimations, addInteractiveMap, addWordCloud,
-        addDataStreamVisualization, addVision2030ProgressBar, addPulsatingEffect, addChatbot,
-        addSocialSharing, addInteractiveTimeline, add3DRotatingCube, addDynamicPieChart,
-        addForceDirectedGraph, addInteractiveTreemap, addRadarChart, addFDIChart,
-        addShootingStars, addParticleSystem
-    ].forEach(safeExecute);
-}
+        .map-point:hover {
+            transform: scale(1.2);
+        }
 
-// Ensure charts are created only after the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initializeAllCharts();
-});
+        .map-info {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            display: none;
+        }
 
-// Add this line to ensure horizontal scrolling works
-document.querySelector('#container').style.overflowX = 'scroll'; }
+        /* Interactive timeline */
+        .timeline-container {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .timeline {
+            display: inline-block;
+            height: 100%;
+        }
+
+        .timeline-event {
+            display: inline-block;
+            width: 100px;
+            height: 100%;
+            margin-right: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .timeline-event:hover {
+            transform: scale(1.1);
+        }
+
+        .timeline-event h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .timeline-event p {
+            font-size: 0.8rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .info-section {
+                width: 250px;
+            }
+
+            .map-container {
+                width: 500px;
+                height: 333px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .info-section {
+                width: 200px;
+            }
+
+            .map-container {
+                width: 400px;
+                height: 267px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .info-section {
+                position: static;
+                width: 90%;
+                margin: 20px auto;
+            }
+
+            .map-container {
+                width: 90%;
+                height: 300px;
+            }
+
+            .timeline-container {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .did-you-know {
+                width: 250px;
+                height: 250px;
+            }
+
+            .map-container {
+                height: 250px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="container">
-        <canvas id="saudiVsMalaysia"></canvas>
-<canvas id="neomVsUAE"></canvas>
-<canvas id="investmentTimeline"></canvas>
-<canvas id="jobCreation"></canvas>
-<canvas id="tourismGrowth"></canvas>
-<canvas id="renewableEnergy"></canvas>
-<canvas id="foreignInvestment"></canvas>
-<canvas id="economicDiversification"></canvas>
-<canvas id="neomProjects"></canvas>
-<canvas id="smartCityIndex"></canvas>
-        <div class="section" id="intro">
-            <h1>NEOM: Economic Impact and Challenges</h1>
+    <div class="poster">
+        <div class="background"></div>
+        <div class="stars"></div>
+        <div class="shooting-star"></div>
+        <h1 class="title">NEOM's Economy</h1>
+
+        <div class="info-section">
+            <h2>Economic Vision</h2>
+            <p>NEOM aims to be a global hub for innovation and technology, driving economic growth through sustainable development and cutting-edge industries.</p>
         </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="saudiVsMalaysia" class="chart"></canvas>
-            </div>
+
+        <div class="info-section">
+            <h2>Key Industries</h2>
+            <p>NEOM focuses on future-oriented sectors such as renewable energy, biotechnology, advanced manufacturing, and artificial intelligence.</p>
         </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="neomVsUAE" class="chart"></canvas>
-            </div>
+
+        <div class="info-section">
+            <h2>Investment Opportunities</h2>
+            <p>NEOM offers diverse investment opportunities in infrastructure, technology, and sustainable development projects, attracting global investors.</p>
         </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="investmentTimeline" class="chart"></canvas>
-            </div>
+
+        <div class="info-section">
+            <h2>Workforce Development</h2>
+            <p>NEOM is committed to developing a highly skilled workforce through education and training programs, fostering innovation and entrepreneurship.</p>
         </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="jobCreation" class="chart"></canvas>
-            </div>
+
+        <div class="did-you-know">
+            <h3>Did You Know?</h3>
+            <p>Click to reveal an interesting fact about NEOM's economy!</p>
         </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="tourismGrowth" class="chart"></canvas>
-            </div>
+
+        <div class="chart-container">
+            <canvas class="chart"></canvas>
         </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="renewableEnergy" class="chart"></canvas>
-            </div>
-        </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="foreignInvestment" class="chart"></canvas>
-            </div>
-        </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="economicDiversification" class="chart"></canvas>
-            </div>
-        </div>
-        <div class="section">
-            <div class="poster">
-                <div class="poster-content">
-                    <h2 class="poster-title">NEOM vs Other Megaprojects</h2>
-                    <img src="neom_comparison.jpg" alt="NEOM Comparison" style="max-width: 100%; max-height: 60%;">
-                    <p class="poster-text">NEOM stands out with its ambitious scale and innovative concepts...</p>
+
+        <div class="map-container">
+            <div class="map">
+                <div class="map-point" style="top: 30%; left: 20%;">
+                    <div class="map-info">The Line: Linear city of the future</div>
+                </div>
+                <div class="map-point" style="top: 50%; left: 60%;">
+                    <div class="map-info">Oxagon: Floating industrial city</div>
+                </div>
+                <div class="map-point" style="top: 70%; left: 40%;">
+                    <div class="map-info">Trojena: Mountain tourism destination</div>
                 </div>
             </div>
         </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="smartCityIndex" class="chart"></canvas>
-            </div>
-        </div>
-        <div class="section">
-            <div class="chart-container">
-                <canvas id="neomProjects" class="chart"></canvas>
-            </div>
-        </div>
-        <div class="section">
-            <div class="poster">
-                <div class="poster-content">
-                    <h2 class="poster-title">Economic Challenges of NEOM</h2>
-                    <p class="poster-text">Despite its ambitious goals, NEOM faces significant economic hurdles...</p>
+
+        <div class="timeline-container">
+            <div class="timeline">
+                <div class="timeline-event">
+                    <h4>2017</h4>
+                    <p>NEOM project announced</p>
                 </div>
-            </div>
-        </div>
-        <div class="section">
-            <div class="poster">
-                <div class="poster-content">
-                    <h2 class="poster-title">Political Implications</h2>
-                    <p class="poster-text">The development of NEOM has far-reaching political consequences...</p>
-                    <canvas id="saudiVsMalaysia"></canvas>
-<canvas id="neomVsUAE"></canvas>
-<canvas id="investmentTimeline"></canvas>
-<canvas id="jobCreation"></canvas>
-<canvas id="tourismGrowth"></canvas>
-<canvas id="renewableEnergy"></canvas>
-<canvas id="foreignInvestment"></canvas>
-<canvas id="economicDiversification"></canvas>
-<canvas id="neomProjects"></canvas>
-<canvas id="smartCityIndex"></canvas>
+                <div class="timeline-event">
+                    <h4>2019</h4>
+                    <p>NEOM Bay Airport opened</p>
                 </div>
-            </div>
-        </div>
-        <div class="section">
-            <div class="poster">
-                <div class="poster-content">
-                    <h2 class="poster-title">Environmental Concerns</h2>
-                    <p class="poster-text">While promoting sustainability, NEOM's construction raises environmental questions...</p>
+                <div class="timeline-event">
+                    <h4>2021</h4>
+                    <p>The Line unveiled</p>
                 </div>
-            </div>
-        </div>
-        <div class="section">
-            <div class="poster">
-                <div class="poster-content">
-                    <h2 class="poster-title">Social Impact and Challenges</h2>
-                    <p class="poster-text">NEOM's development will significantly affect local communities and social structures...</p>
+                <div class="timeline-event">
+                    <h4>2022</h4>
+                    <p>Oxagon industrial city announced</p>
+                </div>
+                <div class="timeline-event">
+                    <h4>2023</h4>
+                    <p>Trojena mountain resort revealed</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="nav-dots"></div>
-    <div class="progress-bar"></div>
-    <button class="mode-toggle">Toggle Dark/Light Mode</button>
-    <div class="timeline"></div>
+    <div class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Interesting Fact</h2>
+            <p id="modal-text"></p>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Particle background
-        function createParticles() {
-            const container = document.body;
-            const particleCount = 100;
+        // Generate stars
+        function generateStars() {
+            const starsContainer = document.querySelector('.stars');
+            const numberOfStars = 200;
 
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.top = Math.random() * 100 + 'vh';
-                particle.style.width = Math.random() * 5 + 'px';
-                particle.style.height = particle.style.width;
-                container.appendChild(particle);
-
-                animateParticle(particle);
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                starsContainer.appendChild(star);
             }
         }
 
-        function animateParticle(particle) {
-            const animation = particle.animate(
-                [
-                    { transform: 'translate(0, 0)' },
-                    { transform: `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px)` }
-                ],
-                {
-                    duration: Math.random() * 3000 + 2000,
-                    direction: 'alternate',
-                    iterations: Infinity
-                }
-            );
+        generateStars();
+        // Shooting star animation
+        function animateShootingStar() {
+            const shootingStar = document.querySelector('.shooting-star');
+            const randomStart = Math.random() * 100;
+            const randomDuration = Math.random() * 5 + 2; // Between 2s to 7s
+
+            shootingStar.style.top = `${randomStart}%`;
+            shootingStar.style.animationDuration = `${randomDuration}s`;
+            shootingStar.style.left = '-10px'; // Start off-screen
+
+            // Reset position after animation
+            setTimeout(() => {
+                shootingStar.style.left = '100%'; // Move to the right
+            }, 100);
         }
 
-        // Shooting stars
-        function createShootingStar() {
-            const star = document.createElement('div');
-            star.classList.add('shooting-star');
-            document.body.appendChild(star);
+        setInterval(animateShootingStar, 3000); // Animate every 3 seconds
 
-            const startX = Math.random() * window.innerWidth;
-            const startY = Math.random() * window.innerHeight;
-            const endX = startX + (Math.random() * 200 - 100);
-            const endY = startY + (Math.random() * 200 - 100);
-
-            star.style.left = startX + 'px';
-            star.style.top = startY + 'px';
-
-            const animation = star.animate(
-                [
-                    { transform: 'translate(0, 0)', opacity: 1 },
-                    { transform: `translate(${endX - startX}px, ${endY - startY}px)`, opacity: 0 }
-                ],
-                {
-                    duration: 1000,
-                    easing: 'ease-out'
-                }
-            );
-
-            animation.onfinish = () => {
-                star.remove();
-                setTimeout(createShootingStar, Math.random() * 3000);
-            };
-        }
-
-        // Chart creation functions
-        function createSaudiVsMalaysiaChart() {
-            const ctx = document.getElementById('saudiVsMalaysia').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Project A', 'Project B', 'Project C'],
-                    datasets: [
-                        {
-                            label: 'Saudi Arabia',
-                            data: [300, 450, 600],
-                            backgroundColor: 'rgba(255, 99, 132, 0.7)'
-                        },
-                        {
-                            label: 'Malaysia',
-                            data: [200, 300, 400],
-                            backgroundColor: 'rgba(54, 162, 235, 0.7)'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Saudi vs Malaysia Projects'
-                        }
+        // Chart.js setup
+        const ctx = document.querySelector('.chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Renewable Energy', 'Biotechnology', 'Advanced Manufacturing', 'AI', 'Tourism'],
+                datasets: [{
+                    label: 'Investment Areas',
+                    data: [40, 30, 20, 25, 15],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
-            });
-        }
-
-        function createNeomVsUAEChart() {
-            const ctx = document.getElementById('neomVsUAE').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Scale', 'Investment', 'Innovation', 'Sustainability', 'Economic Impact'],
-                    datasets: [
-                        {
-                            label: 'NEOM',
-                            data: [95, 90, 98, 85, 92],
-                            fill: true,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgb(255, 99, 132)',
-                            pointBackgroundColor: 'rgb(255, 99, 132)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgb(255, 99, 132)'
-                        },
-                        {
-                            label: 'UAE Projects',
-                            data: [80, 85, 75, 80, 85],
-                            fill: true,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgb(54, 162, 235)',
-                            pointBackgroundColor: 'rgb(54, 162, 235)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgb(54, 162, 235)'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'NEOM vs UAE Projects'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createInvestmentTimelineChart() {
-            const ctx = document.getElementById('investmentTimeline').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
-                    datasets: [{
-                        label: 'Investment (Billion USD)',
-                        data: [10, 25,                         50, 100, 200, 300],
-                        borderColor: 'rgba(0, 255, 255, 1)',
-                        backgroundColor: 'rgba(0, 255, 255, 0.2)',
-                        fill: true,
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Investment Timeline'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `Year: ${context.label}, Investment: $${context.raw}B`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function createJobCreationChart() {
-            const ctx = document.getElementById('jobCreation').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['2025', '2027', '2029', '2031', '2033'],
-                    datasets: [{
-                        label: 'Jobs Created',
-                        data: [50000, 100000, 200000, 300000, 380000],
-                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Job Creation Forecast'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createTourismGrowthChart() {
-            const ctx = document.getElementById('tourismGrowth').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['2025', '2026', '2027', '2028', '2029', '2030'],
-                    datasets: [{
-                        label: 'Tourism Growth (Visitors)',
-                        data: [1000000, 2000000, 3500000, 5000000, 7000000, 10000000],
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        fill: true,
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Tourism Growth Forecast'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createRenewableEnergyChart() {
-            const ctx = document.getElementById('renewableEnergy').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['2025', '2026', '2027', '2028', '2029', '2030'],
-                    datasets: [{
-                        label: 'Renewable Energy Adoption (%)',
-                        data: [10, 20, 35, 50, 70, 100],
-                        backgroundColor: 'rgba(255, 206, 86, 0.7)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Renewable Energy Adoption'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createForeignInvestmentChart() {
-            const ctx = document.getElementById('foreignInvestment').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['2020', '2022', '2024', '2026', '2028', '2030'],
-                    datasets: [{
-                        label: 'FDI Inflow (Billion USD)',
-                        data: [5.5, 7.2, 10.5, 15.8, 22.3, 30.0],
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true,
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Foreign Direct Investment'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createEconomicDiversificationChart() {
-            const ctx = document.getElementById('economicDiversification').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: economicDiversification.map(d => d.sector),
-                    datasets: [{
-                        label: '2020',
-                        data: economicDiversification.map(d => d.percentage2020),
-                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
-                    }, {
-                        label: '2030',
-                        data: economicDiversification.map(d => d.percentage2030),
-                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Economic Diversification'
-                        },
-                        legend: {
-                            display: true,
-                            position: 'top'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createNEOMVsOtherMegaprojectsChart() {
-            const ctx = document.getElementById('neomProjects').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['NEOM', 'Dubai Creek Harbour', 'Songdo IBD', 'Masdar City'],
-                    datasets: [{
-                        label: 'Investment (Billion USD)',
-                        data: [500, 20, 40, 22],
-                        backgroundColor: 'rgba(255, 206, 86, 0.7)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'NEOM vs Other Megaprojects'
-                        }
-                    }
-                }
-            });
-        }
-
-        function createSmartCityIndexChart() {
-            const ctx = document.getElementById('smartCityIndex').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Infrastructure', 'Technology', 'Sustainability', 'Quality of Life', 'Economic Growth'],
-                    datasets: [{
-                        label: 'NEOM',
-                        data: [90, 95, 85, 80, 90],
-                        backgroundColor: 'rgba(0, 255, 255, 0.2)',
-                        borderColor: 'rgba(0, 255, 255, 1)',
-                        borderWidth: 1
-                    }, {
-                        label: 'Global Average',
-                        data: [70, 75, 65, 60, 65],
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Smart City Index Comparison'
-                        }
-                    }
-                }
-            });
-        }
-
-        // Initialize all charts
-        function initializeAllCharts() {
-            createSaudiVsMalaysiaChart();
-            createNeomVsUAEChart();
-            createInvestmentTimelineChart();
-            createJobCreationChart();
-            createTourismGrowthChart();
-            createRenewableEnergyChart();
-            createForeignInvestmentChart();
-            createEconomicDiversificationChart();
-            createNEOMVsOtherMegaprojectsChart();
-            createSmartCityIndexChart();
-        }
-
-        // Initialize all components
-        function initializeAllComponents() {
-            createParticles();
-            createShootingStar();
-            addDynamicBackground();
-            addInteractiveDataPoints();
-            addNewsTicker();
-            addDayNightCycle();
-            initializeAllCharts();
-            addFloatingActionButton();
-            addScrollProgressBar();
-            addScrollTriggeredAnimations();
-            addInteractiveMap();
-            addWordCloud();
-            addDataStreamVisualization();
-            addVision2030ProgressBar();
-            addPulsatingEffect();
-            addChatbot();
-            addSocialSharing();
-            addInteractiveTimeline();
-            add3DRotatingCube();
-            addDynamicPieChart();
-            addForceDirectedGraph();
-            addInteractiveTreemap();
-            addRadarChart();
-            addFDIChart();
-            addShootingStars();
-            addParticleSystem();
-        }
-
-        // Call the initialization function
-        window.addEventListener('load', () => {
-            initializeAllComponents();
+            }
         });
 
-        // Error handling
-        function handleError(error) {
-            console.error("An error occurred:", error);
-            alert("An error occurred. Please check the console for more information.");
-        }
+        // Did you know bubble interactivity
+        const didYouKnowBubble = document.querySelector('.did-you-know');
+        const modal = document.querySelector('.modal');
+        const modalText = document.getElementById('modal-text');
+        const modalClose = document.querySelector('.modal-close');
 
-        // Performance optimization
-        window.addEventListener('resize', debounce(() => {
-            d3.selectAll("svg").remove();
-            initializeAllComponents();
-        }, 250));
+        const facts = [
+            "NEOM is designed to be a city of the future, integrating smart technology in every aspect.",
+            "The Line will be 170 kilometers long and will house 9 million residents.",
+            "NEOM aims to be powered entirely by renewable energy.",
+            "Oxagon is planned to be the world's largest floating structure.",
+            "Trojena will host a year-round outdoor skiing facility."
+        ];
 
-        // Ensure everything works
-        function ensureEverythingWorks() {
-            console.log("All components initialized successfully!");
-        }
+        didYouKnowBubble.addEventListener('click', () => {
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            modalText.innerText = randomFact;
+            modal.classList.add('show');
+        });
 
-        // Call the function to ensure everything works
-        ensureEverythingWorks();
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
 
+        // Map interactivity
+        const mapPoints = document.querySelectorAll('.map-point');
+        mapPoints.forEach(point => {
+            point.addEventListener('mouseenter', () => {
+                const info = point.querySelector('.map-info');
+                info.style.display = 'block';
+            });
+            point.addEventListener('mouseleave', () => {
+                const info = point.querySelector('.map-info');
+                info.style.display = 'none';
+            });
+        });
 
-// Data definitions
-const economicDiversification = [
-    { sector: "Oil & Gas", percentage2020: 60, percentage2030: 30 },
-    { sector: "Technology", percentage2020: 10, percentage2030: 25 },
-    { sector: "Tourism", percentage2020: 5, percentage2030: 15 },
-    { sector: "Manufacturing", percentage2020: 15, percentage2030: 20 },
-    { sector: "Others", percentage2020: 10, percentage2030: 10 }
-];
-
-// Missing function implementations
-function addDynamicBackground() {
-    // Implementation for dynamic background
-}
-
-function addNewsTicker() {
-    // Implementation for news ticker
-}
-
-function addDayNightCycle() {
-    // Implementation for day/night cycle
-}
-
-function addFloatingActionButton() {
-    const fab = document.createElement('button');
-    fab.textContent = '↑';
-    fab.style.position = 'fixed';
-    fab.style.bottom = '20px';
-    fab.style.right = '20px';
-    document.body.appendChild(fab);
-}
-
-function addScrollProgressBar() {
-    const progressBar = document.createElement('div');
-    progressBar.classList.add('progress-bar');
-    document.body.appendChild(progressBar);
-}
-
-function addScrollTriggeredAnimations() {
-    // Implementation for scroll-triggered animations
-}
-
-function addInteractiveMap() {
-    // Implementation for interactive map
-}
-
-function addWordCloud() {
-    // Implementation for word cloud
-}
-
-function addDataStreamVisualization() {
-    // Implementation for data stream visualization
-}
-
-function addVision2030ProgressBar() {
-    // Implementation for Vision 2030 progress bar
-}
-
-function addPulsatingEffect() {
-    // Implementation for pulsating effect
-}
-
-function addChatbot() {
-    // Implementation for chatbot
-}
-
-function addSocialSharing() {
-    // Implementation for social sharing
-}
-
-function addInteractiveTimeline() {
-    // Implementation for interactive timeline
-}
-
-function add3DRotatingCube() {
-    // Implementation for 3D rotating cube
-}
-
-function addDynamicPieChart() {
-    // Implementation for dynamic pie chart
-}
-
-function addForceDirectedGraph() {
-    // Implementation for force-directed graph
-}
-
-function addInteractiveTreemap() {
-    // Implementation for interactive treemap
-}
-
-function addRadarChart() {
-    // Implementation for radar chart
-}
-
-function addFDIChart() {
-    // Implementation for FDI chart
-}
-
-function addShootingStars() {
-    // Implementation for shooting stars
-}
-
-function addParticleSystem() {
-    // Implementation for particle system
-}
-
-// Error handling wrapper
-function safeExecute(func) {
-    try {
-        func();
-    } catch (error) {
-        handleError(error);
-    }
-}
-
-// Responsive design
-window.addEventListener('resize', debounce(() => {
-    adjustForScreenSize();
-}, 250));
-
-function adjustForScreenSize() {
-    // Adjust layout and chart sizes based on screen size
-}
-
-// Horizontal scrolling
-function enableHorizontalScrolling() {
-    const container = document.getElementById('container');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    container.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startX = e.pageX - container.offsetLeft;
-        scrollLeft = container.scrollLeft;
-    });
-
-    container.addEventListener('mouseleave', () => {
-        isDown = false;
-    });
-
-    container.addEventListener('mouseup', () => {
-        isDown = false;
-    });
-
-    container.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 3;
-        container.scrollLeft = scrollLeft - walk;
-    });
-}
-
-// Quiz feature
-function addQuizFeature() {
-    // Implementation for quiz feature
-}
-
-// Ensure all components are initialized safely
-function initializeAllComponents() {
-    [createParticles, createShootingStar, addDynamicBackground, addInteractiveDataPoints,
-     addNewsTicker, addDayNightCycle, initializeAllCharts, addFloatingActionButton,
-     addScrollProgressBar, addScrollTriggeredAnimations, addInteractiveMap, addWordCloud,
-     addDataStreamVisualization, addVision2030ProgressBar, addPulsatingEffect, addChatbot,
-     addSocialSharing, addInteractiveTimeline, add3DRotatingCube, addDynamicPieChart,
-     addForceDirectedGraph, addInteractiveTreemap, addRadarChart, addFDIChart,
-     addShootingStars, addParticleSystem, enableHorizontalScrolling, addQuizFeature
-    ].forEach(safeExecute);
-}
-
-// Call this function to ensure everything works
-function ensureEverythingWorks() {
-    console.log("All components initialized successfully!");
-    // Add any additional checks here
-}
-
-// Load necessary scripts dynamically
-function loadScript(url, callback) {
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
-    script.onload = callback;
-    document.head.appendChild(script);
-}
-
-// Load required libraries
-loadScript('https://d3js.org/d3.v7.min.js', () => {
-    loadScript('https://cdn.jsdelivr.net/npm/chart.js', initializeAllComponents); console.log('All scripts loaded and executed');
-});
-        console.log('All scripts loaded and executed');
+        // Timeline event interactivity
+        const timelineEvents = document.querySelectorAll('.timeline-event');
+        timelineEvents.forEach(event => {
+            event.addEventListener('click', () => {
+                const year = event.querySelector('h4').innerText;
+                const description = event.querySelector('p').innerText;
+                alert(`Year: ${year}\nDescription: ${description}`);
+            });
+        });
     </script>
 </body>
 </html>
