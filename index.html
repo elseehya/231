@@ -3,603 +3,815 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEOM's Economy - Interactive Poster</title>
+    <title>NEOM Economy Facts - Ultra Animated</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        /* Reset and base styles */
-        * {
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
             font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        /* Main container */
-        .poster {
-            width: 100vw;
+            background: linear-gradient(45deg, #001f3f, #003366, #0066cc, #0099ff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #ffffff;
             height: 100vh;
-            position: relative;
             overflow: hidden;
         }
 
-        /* Background */
-        .background {
+        #scene {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, #001f3f, #0074D9);
-            z-index: -1;
         }
 
-        /* Stars */
-        .stars {
+        .layer {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
         }
 
-        .star {
-            position: absolute;
-            background-color: #fff;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
-        }
-
-        @keyframes twinkle {
-            0% {
-                opacity: 0.2;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        /* Shooting star */
-        .shooting-star {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background-color: #fff;
-            border-radius: 50%;
-            animation: shoot 5s linear infinite;
-        }
-
-        @keyframes shoot {
-            0% {
-                transform: translateX(-100%) translateY(-100%);
-            }
-            100% {
-                transform: translateX(200%) translateY(200%);
-            }
-        }
-
-        /* Title */
-        .title {
-            position: absolute;
-            top: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 3rem;
-            font-weight: bold;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            animation: glow 2s infinite alternate;
-        }
-
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            }
-            100% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-            }
-        }
-
-        /* Info sections */
-        .info-section {
-            position: absolute;
-            width: 300px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .info-section:hover {
-            transform: scale(1.05);
-        }
-
-        .info-section h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .info-section p {
-            font-size: 1rem;
-            line-height: 1.4;
-        }
-
-        /* Positioning info sections */
-        .info-section:nth-child(1) {
-            top: 20%;
-            left: 5%;
-        }
-
-        .info-section:nth-child(2) {
-            top: 20%;
-            right: 5%;
-        }
-
-        .info-section:nth-child(3) {
-            bottom: 20%;
-            left: 5%;
-        }
-
-        .info-section:nth-child(4) {
-            bottom: 20%;
-            right: 5%;
-        }
-
-        /* Did you know bubble */
-        .did-you-know {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+        .container {
+            position: relative;
+            z-index: 10;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 20px;
+            height: 100vh;
+        }
+
+        .button {
+            background-color: #003366;
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
             cursor: pointer;
-            transition: transform 0.3s ease-in-out;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
-        .did-you-know:hover {
-            transform: translate(-50%, -50%) scale(1.1);
+        .button:hover {
+            background-color: #004080;
+            transform: scale(1.05);
         }
 
-        .did-you-know h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+        .fact {
+            display: none;
+            font-size: 24px;
+            margin-top: 30px;
+            text-align: center;
+            max-width: 80%;
         }
 
-        .did-you-know p {
-            font-size: 1rem;
-            line-height: 1.4;
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
         }
 
-        /* Interactive chart */
-        .chart-container {
+        .particle {
             position: absolute;
-            bottom: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 200px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            backdrop-filter: blur(5px);
+            pointer-events: none;
         }
 
         .chart {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Interactive map */
-        .map-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 400px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            backdrop-filter: blur(5px);
+            width: 300px;
+            height: 200px;
+            margin: 20px auto;
             display: none;
         }
 
-        .map {
-            width: 100%;
-            height: 100%;
-            background-image: url('https://example.com/neom-map.jpg');
-            background-size: cover;
-            background-position: center;
-            border-radius: 5px;
+        .chart-bar {
+            fill: #4CAF50;
         }
 
-        .map-point {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #ff0;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
+        .chart-axis {
+            stroke: #ffffff;
         }
 
-        .map-point:hover {
-            transform: scale(1.2);
-        }
-
-        .map-info {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            white-space: nowrap;
-            display: none;
-        }
-
-        /* Interactive timeline */
-        .timeline-container {
-            position: absolute;
-            bottom: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 100px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-
-        .timeline {
-            display: inline-block;
-            height: 100%;
-        }
-
-        .timeline-event {
-            display: inline-block;
-            width: 100px;
-            height: 100%;
-            margin-right: 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            padding: 10px;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .timeline-event:hover {
-            transform: scale(1.1);
-        }
-
-        .timeline-event h4 {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .timeline-event p {
-            font-size: 0.8rem;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .modal.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            color: #000;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 80%;
-            max-height: 80%;
-            overflow-y: auto;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Responsive design */
-        @media (max-width: 1200px) {
-            .info-section {
-                width: 250px;
-            }
-
-            .map-container {
-                width: 500px;
-                height: 333px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .info-section {
-                width: 200px;
-            }
-
-            .map-container {
-                width: 400px;
-                height: 267px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .info-section {
-                position: static;
-                width: 90%;
-                margin: 20px auto;
-            }
-
-            .map-container {
-                width: 90%;
-                height: 300px;
-            }
-
-            .timeline-container {
-                height: 150px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .title {
-                font-size: 2rem;
-            }
-
-            .did-you-know {
-                width: 250px;
-                height: 250px;
-            }
-
-            .map-container {
-                height: 250px;
-            }
+        .chart-text {
+            fill: #ffffff;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="poster">
-        <div class="background"></div>
-        <div class="stars"></div>
-        <div class="shooting-star"></div>
-        <h1 class="title">NEOM's Economy</h1>
-
-        <div class="info-section">
-            <h2>Economic Vision</h2>
-            <p>NEOM aims to be a global hub for innovation and technology, driving economic growth through sustainable development and cutting-edge industries.</p>
-        </div>
-
-        <div class="info-section">
-            <h2>Key Industries</h2>
-            <p>NEOM focuses on future-oriented sectors such as renewable energy, biotechnology, advanced manufacturing, and artificial intelligence.</p>
-        </div>
-
-        <div class="info-section">
-            <h2>Investment Opportunities</h2>
-            <p>NEOM offers diverse investment opportunities in infrastructure, technology, and sustainable development projects, attracting global investors.</p>
-        </div>
-
-        <div class="info-section">
-            <h2>Workforce Development</h2>
-            <p>NEOM is committed to developing a highly skilled workforce through education and training programs, fostering innovation and entrepreneurship.</p>
-        </div>
-
-        <div class="did-you-know">
-            <h3>Did You Know?</h3>
-            <p>Click to reveal an interesting fact about NEOM's economy!</p>
-        </div>
-
-        <div class="chart-container">
-            <canvas class="chart"></canvas>
-        </div>
-
-        <div class="map-container">
-            <div class="map">
-                <div class="map-point" style="top: 30%; left: 20%;">
-                    <div class="map-info">The Line: Linear city of the future</div>
-                </div>
-                <div class="map-point" style="top: 50%; left: 60%;">
-                    <div class="map-info">Oxagon: Floating industrial city</div>
-                </div>
-                <div class="map-point" style="top: 70%; left: 40%;">
-                    <div class="map-info">Trojena: Mountain tourism destination</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="timeline-container">
-            <div class="timeline">
-                <div class="timeline-event">
-                    <h4>2017</h4>
-                    <p>NEOM project announced</p>
-                </div>
-                <div class="timeline-event">
-                    <h4>2019</h4>
-                    <p>NEOM Bay Airport opened</p>
-                </div>
-                <div class="timeline-event">
-                    <h4>2021</h4>
-                    <p>The Line unveiled</p>
-                </div>
-                <div class="timeline-event">
-                    <h4>2022</h4>
-                    <p>Oxagon industrial city announced</p>
-                </div>
-                <div class="timeline-event">
-                    <h4>2023</h4>
-                    <p>Trojena mountain resort revealed</p>
-                </div>
-            </div>
-        </div>
+    <div id="scene">
+        <div class="layer" data-depth="0.1"></div>
+        <div class="layer" data-depth="0.2"></div>
+        <div class="layer" data-depth="0.3"></div>
+    </div>
+    <div class="container">
+        <button class="button" onclick="showFact()">Click for an interesting fact!</button>
+        <div id="icon" class="icon"></div>
+        <div id="fact" class="fact"></div>
+        <svg class="chart" id="chart"></svg>
     </div>
 
-    <div class="modal">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h2>Interesting Fact</h2>
-            <p id="modal-text"></p>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Generate stars
-        function generateStars() {
-            const starsContainer = document.querySelector('.stars');
-            const numberOfStars = 200;
-
-            for (let i = 0; i < numberOfStars; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                star.style.width = `${Math.random() * 3}px`;
-                star.style.height = star.style.width;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 2}s`;
-                starsContainer.appendChild(star);
-            }
-        }
-
-        generateStars();
-        // Shooting star animation
-        function animateShootingStar() {
-            const shootingStar = document.querySelector('.shooting-star');
-            const randomStart = Math.random() * 100;
-            const randomDuration = Math.random() * 5 + 2; // Between 2s to 7s
-
-            shootingStar.style.top = `${randomStart}%`;
-            shootingStar.style.animationDuration = `${randomDuration}s`;
-            shootingStar.style.left = '-10px'; // Start off-screen
-
-            // Reset position after animation
-            setTimeout(() => {
-                shootingStar.style.left = '100%'; // Move to the right
-            }, 100);
-        }
-
-        setInterval(animateShootingStar, 3000); // Animate every 3 seconds
-
-        // Chart.js setup
-        const ctx = document.querySelector('.chart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Renewable Energy', 'Biotechnology', 'Advanced Manufacturing', 'AI', 'Tourism'],
-                datasets: [{
-                    label: 'Investment Areas',
-                    data: [40, 30, 20, 25, 15],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(153, 102, 255, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Did you know bubble interactivity
-        const didYouKnowBubble = document.querySelector('.did-you-know');
-        const modal = document.querySelector('.modal');
-        const modalText = document.getElementById('modal-text');
-        const modalClose = document.querySelector('.modal-close');
-
         const facts = [
-            "NEOM is designed to be a city of the future, integrating smart technology in every aspect.",
-            "The Line will be 170 kilometers long and will house 9 million residents.",
-            "NEOM aims to be powered entirely by renewable energy.",
-            "Oxagon is planned to be the world's largest floating structure.",
-            "Trojena will host a year-round outdoor skiing facility."
+            "NEOM's economy is projected to contribute $48 billion to Saudi Arabia's GDP by 2030.",
+            "The project aims to create over 380,000 jobs in various sectors by 2030.",
+            "NEOM plans to be powered entirely by renewable energy sources.",
+            "The Line, a key component of NEOM, will be a 170km long linear city.",
+            "NEOM's economy will focus on 16 key economic sectors for diversification.",
+            "The project has a total planned area of 26,500 km², larger than some countries.",
+            "NEOM aims to attract more than 1 million residents by 2030.",
+            "The city plans to have fully automated services and processes.",
+            "NEOM will feature advanced transportation systems, including flying taxis.",
+            "The project includes plans for a giant artificial moon as a tourist attraction.",
+            "NEOM will have its own economic free zone with unique tax and labor laws.",
+            "The city aims to be a global hub for biotechnology and digital sciences.",
+            "NEOM plans to be a leading center for food technology and production.",
+            "The project includes plans for the world's largest coral garden to boost tourism.",
+            "NEOM aims to become a major tourist destination, targeting 5 million visitors annually by 2030.",
+            "The city plans to implement a fully digitized government services system.",
+            "NEOM will feature the world's largest green hydrogen production plant.",
+            "The project includes plans for a year-round ski resort to diversify tourism offerings.",
+            "NEOM aims to achieve the highest GDP per capita in the world.",
+            "The city plans to have a fully autonomous public transportation system.",
+            "NEOM will incorporate vertical urban farming to ensure food security.",
+            "The project includes plans for the world's largest floating industrial complex.",
+            "NEOM aims to be a global center for artificial intelligence and robotics research.",
+            "The city plans to implement a fully digital healthcare system.",
+            "NEOM will feature the world's first cognitive city, leveraging AI and IoT technologies.",
+            "The project includes plans for the world's largest carbon-free desalination plant.",
+            "NEOM aims to be a leading hub for e-sports and gaming industries.",
+            "The city plans to have a fully automated port and logistics system.",
+            "NEOM will feature one of the world's largest solar power plants.",
+            "The project includes plans for underwater hotels and restaurants to boost tourism.",
+            "NEOM aims to be a global center for cybersecurity research and development.",
+            "The city plans to incorporate flying cars as a mode of transportation.",
+            "NEOM will feature the world's first fully automated, high-speed freight system.",
+            "The project includes plans for the world's largest indoor vertical farm.",
+            "NEOM aims to be a leading center for space research and exploration.",
+            "The city plans to implement a fully digital education system.",
+            "NEOM will feature one of the world's largest wind farms for renewable energy.",
+            "The project includes plans for a Jurassic Park-style island with robotic dinosaurs as a tourist attraction.",
+            "NEOM aims to be a global hub for fintech and blockchain technology development.",
+            "The city plans to have a fully automated waste management system.",
+            "NEOM will feature the world's largest seawater greenhouse for sustainable agriculture.",
+            "The project includes plans for the world's first fully automated construction site.",
+            "NEOM aims to be a leading center for nanotechnology research and development.",
+            "The city plans to implement a fully digital currency system.",
+            "NEOM will feature the world's largest algae farm for biofuel production.",
+            "The project includes plans for the world's first climate-controlled city.",
+            "NEOM aims to be a global center for water technology innovation.",
+            "The city plans to have a fully automated agriculture system.",
+            "NEOM will feature the world's largest carbon capture and storage facility.",
+            "The project includes plans for the world's first fully 3D-printed neighborhood.",
+            "NEOM aims to be a leading hub for quantum computing research.",
+            "The city plans to implement a fully digital legal system.",
+            "NEOM will feature the world's largest drone delivery network.",
+            "The project includes plans for the world's first fully automated retail experience.",
+            "NEOM aims to be a global center for advanced materials research.",
+            "The city plans to implement a fully digital voting system.",
+            "NEOM will feature the world's largest smart grid system for energy management.",
+            "The project includes plans for the world's first fully autonomous security system.",
+            "NEOM aims to be a leading hub for biotechnology and genetic research.",
+            "The city plans to have a fully automated public services system.",
+            "NEOM will feature the world's largest desalination plant powered by renewable energy.",
+            "The project includes plans for the world's first fully digital art museum.",
+            "NEOM aims to be a global center for sustainable fashion and textile innovation.",
+            "The city plans to have a fully automated traffic management system.",
+            "NEOM will feature the world's largest indoor rainforest as a tourist attraction.",
+            "The project includes plans for the world's first fully autonomous farm.",
+            "NEOM aims to be a leading hub for advanced robotics research and development.",
+            "The city plans to implement a fully digital property registration system.",
+            "NEOM will feature the world's largest network of underground tunnels for transportation.",
+            "The project includes plans for the world's first fully automated hotel.",
+            "NEOM aims to be a global center for sustainable packaging innovation.",
+            "The city plans to implement a fully digital identity system for residents.",
+            "NEOM will feature the world's largest floating solar farm.",
+            "The project includes plans for the world's first fully autonomous public transportation system.",
+            "NEOM aims to be a leading hub for advanced manufacturing technologies.",
+            "The city plans to have a fully automated emergency response system.",
+            "NEOM will feature the world's largest network of electric vehicle charging stations.",
+            "The project includes plans for the world's first fully digital healthcare system.",
+            "NEOM aims to be a global center for sustainable building materials research.",
+            "The city plans to have a fully automated waste recycling system.",
+            "NEOM will feature the world's largest urban air mobility network.",
+            "The project includes plans for the world's first fully digital education system.",
+            "NEOM aims to be a leading hub for advanced energy storage technologies.",
+            "The city plans to have a fully automated water management system.",
+            "NEOM will feature the world's largest network of smart sensors for environmental monitoring.",
+            "The project includes plans for the world's first fully autonomous port.",
+            "NEOM aims to be a global center for sustainable tourism innovation.",
+            "The city plans to implement a fully digital customs and border control system.",
+            "NEOM will feature the world's largest network of underground data centers.",
+            "The project includes plans for the world's first fully automated construction system.",
+            "NEOM aims to be a leading hub for advanced telecommunications research.",
+            "The city plans to have a fully automated food delivery system.",
+            "NEOM will feature the world's largest network of smart streetlights.",
+            "The project includes plans for the world's first fully digital banking system.",
+            "NEOM aims to be a global center for sustainable transportation innovation.",
+            "The city plans to have a fully automated parking management system.",
+            "NEOM will feature the world's largest network of smart buildings.",
+            "The project includes plans for the world's first fully autonomous airport."
         ];
 
-        didYouKnowBubble.addEventListener('click', () => {
-            const randomFact = facts[Math.floor(Math.random() * facts.length)];
-            modalText.innerText = randomFact;
-            modal.classList.add('show');
+        const icons = [
+            "💼", "🏗️", "🌞", "🏙️", "📊", "🗺️", "👥", "🤖", "🚁", "🌙",
+            "💰", "🧬", "🍎", "🐠", "🏖️", "💻", "⚡", "⛷️", "📈", "🚌",
+            "🌱", "🏭", "🧠", "🏥", "🔮", "💧", "🎮", "🚢", "☀️", "🏨",
+            "🔒", "🚗", "🚂", "🌿", "🚀", "🎓", "💨", "🦖", "💳", "♻️",
+            "🌾", "🏗️", "🔬", "💱", "🦠", "❄️", "💧", "🚜", "🏭", "🏠",
+            "💻", "⚖️", "📦", "🛒", "🔬", "🗳️", "⚡", "👮", "🧬", "🏛️",
+            "💧", "🎨", "👚", "🚦", "🌳", "🌾", "🦾", "🏠", "🚇", "🛌",
+            "📦", "🆔", "☀️", "🚌", "🏭", "🚑", "🔌", "👨‍⚕️", "🧱", "♻️",
+            "🚁", "🎓", "🔋", "💧", "🌡️", "🚢", "🏖️", "🛂", "💾", "🏗️",
+            "📡", "🍔", "💡", "🏦", "🚗", "🅿️", "🏢", "✈️"
+        ];
+
+        let currentFactIndex = -1;
+
+        function showFact() {
+            const button = document.querySelector('.button');
+            const factElement = document.getElementById('fact');
+            const iconElement = document.getElementById('icon');
+            const chartElement = document.getElementById('chart');
+
+            gsap.to(button, {duration: 0.5, rotation: 360, opacity: 0, onComplete: () => {
+                button.style.display = 'none';
+                
+                currentFactIndex = (currentFactIndex + 1) % facts.length;
+                const fact = facts[currentFactIndex];
+                const icon = icons[currentFactIndex];
+
+                iconElement.innerHTML = icon;
+                iconElement.style.display = 'block';
+                factElement.textContent = fact;
+                factElement.style.display = 'block';
+
+                gsap.from(iconElement, {duration: 0.5, scale: 0, ease: "back.out(1.7)"});
+                gsap.from(factElement, {duration: 0.5, y: 50, opacity: 0, delay: 0.3});
+
+                createFireworks();
+
+                if (Math.random() < 0.3) {
+                    showChart();
+                } else {
+                    chartElement.style.display = 'none';
+                }
+            }});
+        }
+
+        function createFireworks() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.backgroundColor = getRandomColor();
+                document.body.appendChild(particle);
+
+                gsap.fromTo(particle, 
+                    {
+                        x: window.innerWidth / 2,
+                        y: window.innerHeight / 2,
+                        scale: 0
+                    },
+                    {
+                        duration: 2,
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * window.innerHeight,
+                        scale: 1,
+                        opacity: 0,
+                        ease: "power2.out",
+                        onComplete: () => particle.remove()
+                    }
+                );
+            }
+        }
+
+        function getRandomColor() {
+            return `hsl(${Math.random() * 360}, 100%, 50%)`;
+        }
+
+        function showChart() {
+            const chartElement = document.getElementById('chart');
+            chartElement.style.display = 'block';
+            chartElement.innerHTML = '';
+
+            const data = [
+                {label: 'Renewable Energy', value: 100},
+                {label: 'AI & Robotics', value: 85},
+                {label: 'Biotechnology', value: 70},
+                                {label: 'Tourism', value: 60},
+                {label: 'Advanced Manufacturing', value: 55}
+            ];
+
+            const margin = {top: 20, right: 20, bottom: 30, left: 40};
+            const width = 300 - margin.left - margin.right;
+            const height = 200 - margin.top - margin.bottom;
+
+            const svg = d3.select('#chart')
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+                .append('g')
+                .attr('transform', `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleBand()
+                .range([0, width])
+                .padding(0.1);
+
+            const y = d3.scaleLinear()
+                .range([height, 0]);
+
+            x.domain(data.map(d => d.label));
+            y.domain([0, d3.max(data, d => d.value)]);
+
+            svg.selectAll('.bar')
+                .data(data)
+                .enter().append('rect')
+                .attr('class', 'chart-bar')
+                .attr('x', d => x(d.label))
+                .attr('width', x.bandwidth())
+                .attr('y', height)
+                .attr('height', 0)
+                .transition()
+                .duration(1000)
+                .attr('y', d => y(d.value))
+                .attr('height', d => height - y(d.value));
+
+            svg.append('g')
+                .attr('class', 'chart-axis')
+                .attr('transform', `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll('text')
+                .attr('transform', 'rotate(-45)')
+                .style('text-anchor', 'end');
+
+            svg.append('g')
+                .attr('class', 'chart-axis')
+                .call(d3.axisLeft(y));
+
+            svg.append('text')
+                .attr('x', width / 2)
+                .attr('y', 0)
+                .attr('text-anchor', 'middle')
+                .attr('class', 'chart-text')
+                .text('NEOM Economic Sectors');
+
+            // Add hover effects to bars
+            svg.selectAll('.chart-bar')
+                .on('mouseover', function() {
+                    d3.select(this).transition()
+                        .duration(200)
+                        .attr('fill', '#ff9900');
+                })
+                .on('mouseout', function() {
+                    d3.select(this).transition()
+                        .duration(200)
+                        .attr('fill', '#4CAF50');
+                });
+        }
+
+        // Initialize parallax effect
+        const scene = document.getElementById('scene');
+        const parallaxInstance = new Parallax(scene);
+
+        // Create animated background elements
+        function createBackgroundElements() {
+            const layers = document.querySelectorAll('.layer');
+            layers.forEach((layer, index) => {
+                for (let i = 0; i < 20; i++) {
+                    const element = document.createElement('div');
+                    element.classList.add('bg-element');
+                    element.style.left = `${Math.random() * 100}%`;
+                    element.style.top = `${Math.random() * 100}%`;
+                    element.style.transform = `scale(${0.5 + Math.random()})`;
+                    element.style.opacity = 0.1 + Math.random() * 0.5;
+                    
+                    if (index === 0) {
+                        element.style.backgroundColor = '#ffffff';
+                    } else if (index === 1) {
+                        element.style.backgroundColor = '#aaccff';
+                    } else {
+                        element.style.backgroundColor = '#4477aa';
+                    }
+
+                    layer.appendChild(element);
+
+                    gsap.to(element, {
+                        y: `${Math.random() * 200 - 100}%`,
+                        x: `${Math.random() * 200 - 100}%`,
+                        rotation: Math.random() * 360,
+                        duration: 10 + Math.random() * 20,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: 'none'
+                    });
+                }
+            });
+        }
+
+        createBackgroundElements();
+
+        // Add interactive cursor effect
+        const cursor = document.createElement('div');
+        cursor.classList.add('cursor');
+        document.body.appendChild(cursor);
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1
+            });
         });
 
-        modalClose.addEventListener('click', () => {
-            modal.classList.remove('show');
+        // Create pulsating effect on button
+        gsap.to('.button', {
+            scale: 1.05,
+            duration: 0.5,
+            repeat: -1,
+            yoyo: true,
+            ease: 'power1.inOut'
         });
 
-        // Map interactivity
-        const mapPoints = document.querySelectorAll('.map-point');
-        mapPoints.forEach(point => {
-            point.addEventListener('mouseenter', () => {
-                const info = point.querySelector('.map-info');
-                info.style.display = 'block';
-            });
-            point.addEventListener('mouseleave', () => {
-                const info = point.querySelector('.map-info');
-                info.style.display = 'none';
+        // Add scroll-triggered animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.utils.toArray('.animate-on-scroll').forEach((element) => {
+            gsap.from(element, {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: element,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none reverse'
+                }
             });
         });
 
-        // Timeline event interactivity
-        const timelineEvents = document.querySelectorAll('.timeline-event');
-        timelineEvents.forEach(event => {
-            event.addEventListener('click', () => {
-                const year = event.querySelector('h4').innerText;
-                const description = event.querySelector('p').innerText;
-                alert(`Year: ${year}\nDescription: ${description}`);
+        // Create a particle system
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 5 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.size > 0.1) this.size -= 0.1;
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+
+        let particleArray = [];
+
+        function createParticle(x, y) {
+            for (let i = 0; i < 5; i++) {
+                particleArray.push(new Particle(x, y));
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particleArray.length; i++) {
+                particleArray[i].update();
+                particleArray[i].draw();
+
+                if (particleArray[i].size <= 0.1) {
+                    particleArray.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            createParticle(e.x, e.y);
+        });
+
+        animateParticles();
+
+        // Add 3D card effect
+        const card = document.querySelector('.container');
+        card.addEventListener('mousemove', cardEffect);
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {duration: 0.5, transform: 'rotateY(0) rotateX(0)'});
+        });
+
+        function cardEffect(event) {
+            const rect = card.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const mouseX = event.clientX - centerX;
+            const mouseY = event.clientY - centerY;
+            const rotateX = (mouseY / centerY) * 10;
+            const rotateY = (mouseX / centerX) * -10;
+
+            gsap.to(card, {duration: 0.5, transform: `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`});
+        }
+
+        // Add typewriter effect to facts
+        function typewriterEffect(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Modify showFact function to use typewriter effect
+        function showFact() {
+            const button = document.querySelector('.button');
+            const factElement = document.getElementById('fact');
+            const iconElement = document.getElementById('icon');
+            const chartElement = document.getElementById('chart');
+
+            gsap.to(button, {duration: 0.5, rotation: 360, opacity: 0, onComplete: () => {
+                button.style.display = 'none';
+                
+                currentFactIndex = (currentFactIndex + 1) % facts.length;
+                const fact = facts[currentFactIndex];
+                const icon = icons[currentFactIndex];
+
+                iconElement.innerHTML = icon;
+                iconElement.style.display = 'block';
+                factElement.style.display = 'block';
+
+                gsap.from(iconElement, {duration: 0.5, scale: 0, ease: "back.out(1.7)"});
+                
+                typewriterEffect(factElement, fact);
+
+                createFireworks();
+
+                if (Math.random() < 0.3) {
+                    showChart();
+                } else {
+                    chartElement.style.display = 'none';
+                }
+            }});
+        }
+
+        // Add confetti effect
+        function createConfetti() {
+            const confettiCount = 100;
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = '-5%';
+                confetti.style.transform = `scale(${Math.random()})`;
+                document.body.appendChild(confetti);
+
+                gsap.to(confetti, {
+                    y: `${100 + Math.random() * 100}%`,
+                    rotation: Math.random() * 360,
+                    duration: 2 + Math.random() * 2,
+                    ease: 'power1.out',
+                    onComplete: () => confetti.remove()
+                });
+            }
+        }
+
+        // Modify showFact function to include confetti effect
+        function showFact() {
+            const button = document.querySelector('.button');
+            const factElement = document.getElementById('fact');
+            const iconElement = document.getElementById('icon');
+            const chartElement = document.getElementById('chart');
+
+            gsap.to(button, {duration: 0.5, rotation: 360, opacity: 0, onComplete: () => {
+                button.style.display = 'none';
+                
+                currentFactIndex = (currentFactIndex + 1) % facts.length;
+                const fact = facts[currentFactIndex];
+                const icon = icons[currentFactIndex];
+
+                iconElement.innerHTML = icon;
+                iconElement.style.display = 'block';
+                factElement.style.display = 'block';
+
+                gsap.from(iconElement, {duration: 0.5, scale: 0, ease: "back.out(1.7)"});
+                
+                typewriterEffect(factElement, fact);
+
+                createFireworks();
+                createConfetti();
+
+                if (Math.random() < 0.3) {
+                    showChart();
+                } else {
+                    chartElement.style.display = 'none';
+                }
+            }});
+        }
+
+        // Add sound effects
+        const clickSound = new Audio('click.mp3');
+        const popSound = new Audio('pop.mp3');
+
+        document.querySelector('.button').addEventListener('click', () => {
+            clickSound.play();
+        });
+
+        // Play pop sound when confetti is created
+        function createConfetti() {
+            // ... (previous confetti code)
+            popSound.play();
+        }
+
+        // Add a pulsating glow effect to the button
+        gsap.to('.button', {
+            boxShadow: '0 0 20px 10px rgba(255, 255, 255, 0.5)',
+            duration: 1,
+            repeat: -1,
+            yoyo: true,
+            ease: 'power1.inOut'
+        });
+
+        // Add a floating animation to the fact text
+        function floatingAnimation() {
+            gsap.to('#fact', {
+                y: '10px',
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: 'power1.inOut'
+            });
+        }
+
+        floatingAnimation();
+
+        // Add a particle trail to the cursor
+        function createCursorTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.classList.add('cursor-trail');
+            trail.style.left = `${x}px`;
+            trail.style.top = `${y}px`;
+            document.body.appendChild(trail);
+
+            gsap.to(trail, {
+                opacity: 0,
+                scale: 0,
+                duration: 1,
+                onComplete: () => trail.remove()
+            });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            createCursorTrail(e.clientX, e.clientY);
+        });
+
+        // Add a ripple effect when clicking the button
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            button.appendChild(ripple);
+
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            ripple.style.width = ripple.style.height = `${diameter}px`;
+            ripple.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            ripple.style.top = `${event.clientY - button.offsetTop - radius}px`;
+
+            ripple.addEventListener('animationend', () => ripple.remove());
+        }
+
+        document.querySelector('.button').addEventListener('click', createRipple);
+
+        // Add a scroll-triggered parallax effect to background elements
+        gsap.utils.toArray('.bg-element').forEach((element, i) => {
+            gsap.to(element, {
+                y: (i + 1) * 100,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: document.body,
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub                     1,
+                    markers: true
+                }
             });
         });
+
+        // Create a function to handle the button click sound
+        function playClickSound() {
+            clickSound.currentTime = 0; // Reset the sound to the beginning
+            clickSound.play();
+        }
+
+        // Update the button click event to include sound
+        document.querySelector('.button').addEventListener('click', () => {
+            playClickSound();
+            showFact();
+        });
+
+        // Add a function to handle the transition between facts
+        function transitionToNextFact() {
+            const factElement = document.getElementById('fact');
+            const iconElement = document.getElementById('icon');
+
+            gsap.to(factElement, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    factElement.style.display = 'none';
+                    iconElement.style.display = 'none';
+                    showFact();
+                }
+            });
+        }
+
+        // Modify the showFact function to include transition
+        function showFact() {
+            const button = document.querySelector('.button');
+            const factElement = document.getElementById('fact');
+            const iconElement = document.getElementById('icon');
+            const chartElement = document.getElementById('chart');
+
+            gsap.to(button, {duration: 0.5, rotation: 360, opacity: 0, onComplete: () => {
+                button.style.display = 'none';
+
+                currentFactIndex = (currentFactIndex + 1) % facts.length;
+                const fact = facts[currentFactIndex];
+                const icon = icons[currentFactIndex];
+
+                iconElement.innerHTML = icon;
+                iconElement.style.display = 'block';
+                factElement.style.display = 'block';
+
+                gsap.from(iconElement, {duration: 0.5, scale: 0, ease: "back.out(1.7)"});
+                
+                typewriterEffect(factElement, fact);
+
+                createFireworks();
+                createConfetti();
+
+                if (Math.random() < 0.3) {
+                    showChart();
+                } else {
+                    chartElement.style.display = 'none';
+                }
+
+                // Add transition to next fact
+                setTimeout(transitionToNextFact, 5000);
+            }});
+        }
+
+        // Add CSS for cursor trail
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .cursor-trail {
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.8);
+                pointer-events: none;
+                transform: translate(-50%, -50%);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize the first fact
+        showFact();
     </script>
 </body>
 </html>
